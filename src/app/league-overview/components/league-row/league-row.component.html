@@ -1,0 +1,9 @@
+<ng-container *ngIf="league">
+    <div class="d-flex">
+        <img [src]="getLeagueImg()" width="75px" height="75px" class="rounded-50 me-3">
+        <div class="flex-column">
+            <p>{{ league.name }}</p>
+            <small>{{ league.total_rosters }} person league</small>
+        </div>
+    </div>
+</ng-container>

@@ -1,0 +1,52 @@
+<app-loading-spinner *ngIf="playerService.loading || matchup === null; else matchupContent"></app-loading-spinner>
+<ng-template #matchupContent>
+    <div class="bg-light p-2 rounded-2">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        <img [src]="getTeamImg(matchup!.teamOne)" class="rounded-2" height="25px">
+                        {{ getTeamName(matchup!.teamOne) }}
+                    </th>
+                    <th scope="col" colspan="2"></th>
+                    <th scope="col" class="text-end">
+                        {{ getTeamName(matchup!.teamTwo) }}
+                        <img [src]="getTeamImg(matchup!.teamTwo)" class="rounded-2" height="25px">
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let playerMatchup of playerMatchups; let i=index;">
+                    <td class="text-start">
+                        <div class="fs-5">
+                            <span class="badge" [ngClass]="getPositionStyle(playerMatchup.playerOne?.position)">
+                                {{ playerMatchup.playerOne?.position }}
+                            </span>
+                            <img [src]="getPlayerImg(playerMatchup.playerOne)" width="50px">
+                            {{ playerMatchup.playerOne?.full_name }}&nbsp;&nbsp;<span [ngClass]="getInjuryStatusStyle(playerMatchup.playerOne?.injury_status)">{{ getInjuryStatusText(playerMatchup.playerOne?.injury_status) }}</span>
+                        </div>
+                    </td>
+                    <td>{{ getPlayerPoints(matchup?.teamOneStartersPoints, i) }}</td>
+                    <td>{{ getPlayerPoints(matchup?.teamTwoStartersPoints, i) }}</td>
+                    <td class="text-end">
+                        <div class="fs-5">
+                            <span [ngClass]="getInjuryStatusStyle(playerMatchup.playerTwo?.injury_status)">{{ getInjuryStatusText(playerMatchup.playerTwo?.injury_status) }}</span>&nbsp;&nbsp;{{ playerMatchup.playerTwo?.full_name }}
+                            <img [src]="getPlayerImg(playerMatchup.playerTwo)" width="50px">
+                            <span class="badge" [ngClass]="getPositionStyle(playerMatchup.playerTwo?.position)">
+                                {{ playerMatchup.playerTwo?.position }}
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="first-col"></td>
+                    <td><b>{{ matchup?.teamOnePoints }}</b></td>
+                    <td><b>{{ matchup?.teamTwoPoints }}</b></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</ng-template>

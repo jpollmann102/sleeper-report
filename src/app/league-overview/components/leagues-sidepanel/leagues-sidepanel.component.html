@@ -1,0 +1,22 @@
+<div class="border rounded-2 px-4 py-2">
+    <app-loading-spinner *ngIf="loading; else leagueSidePanel"></app-loading-spinner>
+    <ng-template #leagueSidePanel>
+        <h4>My Leagues</h4>
+        <div class="d-flex">
+            <div 
+                *ngFor="let league of leagues; let i=index;" 
+                class="rounded-2 p-3 league-row"
+                (click)="leagueSelected.emit(league)"
+                [ngClass]="{ 
+                    'bg-light': i % 2 === 0,
+                    'border border-primary': selectedLeague === league
+                }"
+            >
+                <app-league-row [league]="league"></app-league-row>
+            </div>
+            <div *ngIf="leagues.length === 0" class="col-12">
+                <p>You have no leagues</p>
+            </div>
+        </div>
+    </ng-template>
+</div>

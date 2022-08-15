@@ -1,0 +1,11 @@
+<div *ngIf="division" class="bg-light p-2 rounded-2">
+    <div class="d-flex">
+        <img [src]="division.avatar" width="75px" height="75px" class="rounded-2 me-3">
+        <div class="flex-column">
+            <p><b>{{ division.name }}</b></p>
+            <div *ngFor="let user of division.users" class="mb-3">
+                <app-division-user [user]="user"></app-division-user>
+            </div>
+        </div>
+    </div>
+</div>

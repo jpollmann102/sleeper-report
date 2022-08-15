@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand-lg bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="javascript:void(0)">Sleeper Report</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar">
+            <ng-container *ngIf="authService.isLoggedIn">
+                <ul class="navbar-nav me-auto">
+                </ul>
+                <button
+                    type="button"
+                    class="btn btn-outline-light mb-3 mb-md-0"
+                    (click)="authService.logout()"
+                >
+                    Sign out
+                </button>
+            </ng-container>
+        </div>
+    </div>
+</nav>

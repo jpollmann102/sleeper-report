@@ -1,0 +1,7 @@
+<div *ngIf="user" class="d-flex">
+    <img [src]="teamImg" height="50px" width="50px" class="rounded-2 me-3">
+    <div class="flex-column">
+        <div class="text-break">{{ teamName }}</div>
+        <small>{{ user.roster.settings.wins }} - {{ user.roster.settings.losses }} - {{ user.roster.settings.ties }}</small>    
+    </div>
+</div>

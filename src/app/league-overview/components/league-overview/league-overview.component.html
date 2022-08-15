@@ -1,0 +1,17 @@
+<div class="border rounded-2 px-4 py-2">
+    <div *ngIf="selectedLeague === null">
+        <h4>Nothing to show</h4>
+    </div>
+    <app-loading-spinner *ngIf="loading; else leagueOverview"></app-loading-spinner>
+    <ng-template #leagueOverview>
+        <h4 class="mb-3">{{ selectedLeague!.name }}</h4>
+        <div class="row">
+            <div class="col-12 col-xl-8">
+                <app-league-matchups [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-league-matchups>
+            </div>
+            <div class="col-12 col-xl-4">
+                <app-league-divisions [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-league-divisions>
+            </div>
+        </div>
+    </ng-template>
+</div>
