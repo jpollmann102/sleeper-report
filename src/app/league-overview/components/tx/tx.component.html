@@ -1,0 +1,11 @@
+<app-loading-spinner *ngIf="loading; else txContent"></app-loading-spinner>
+<ng-template #txContent>
+    <div *ngIf="tx" class="bg-light p-3">
+        <h5>{{ leagueService.getTeamName(tx.creatorUser) }}</h5>
+        <ng-container [ngSwitch]="tx.type">
+            <app-tx-fa *ngSwitchCase="'free_agent'" [tx]="tx"></app-tx-fa>
+            <app-tx-waiver *ngSwitchCase="'waiver'" [tx]="tx"></app-tx-waiver>
+            <app-tx-trade *ngSwitchCase="'trade'" [tx]="tx"></app-tx-trade>
+        </ng-container>
+    </div>
+</ng-template>

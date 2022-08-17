@@ -1,0 +1,14 @@
+<div *ngIf="player" class="d-flex">
+    <h3><i class="bi" [ngClass]="{
+        'bi-plus-circle text-success': type === 'add',
+        'bi-dash-circle text-danger': type === 'drop'
+    }"></i></h3>
+    <img [src]="player.imgLink" width="75px" height="60px">
+    <div class="flex-column">
+        <div class="fs-6">{{ player.full_name }}</div>
+        <div class="d-flex">
+            <img [src]="player.teamImgLink" width="25px" height="25px">&nbsp;&nbsp;
+            <div class="fs-6">{{ player.position }}</div>
+        </div>
+    </div>
+</div>

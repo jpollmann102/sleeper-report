@@ -1,3 +1,4 @@
+import { Game } from "./game";
 import { LeagueUser } from "./league-user";
 
 export interface LeagueMatchup {
@@ -6,10 +7,14 @@ export interface LeagueMatchup {
     teamOne:LeagueUser,
     teamOnePoints:number,
     teamOneStarters:Array<string>,
+    teamOneStarterProjections:Array<Game>,
+    teamOneStarterStats:Array<Game>,
     teamOneStartersPoints:Array<number>,
     teamTwo:LeagueUser,
     teamTwoPoints:number,
     teamTwoStarters:Array<string>,
+    teamTwoStarterProjections:Array<Game>,
+    teamTwoStarterStats:Array<Game>,
     teamTwoStartersPoints:Array<number>,
     players?:Array<string>,
     players_points?:{ [key:number]:number },

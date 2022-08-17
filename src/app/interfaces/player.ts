@@ -20,6 +20,8 @@ export interface Player {
     player_id:string,
     height:string,
     search_full_name:string,
+    imgLink:string,
+    teamImgLink:string,
     age:number,
     stats_id:string,
     birth_country:string,

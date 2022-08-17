@@ -1,0 +1,8 @@
+<ng-container *ngIf="tx">
+    <div *ngFor="let add of tx.playerAdds | keyvalue">
+        <app-tx-player [player]="add.value" type="add"></app-tx-player>
+    </div>
+    <div *ngFor="let drop of tx.playerDrops | keyvalue">
+        <app-tx-player [player]="drop.value" type="drop"></app-tx-player>
+    </div>
+</ng-container>

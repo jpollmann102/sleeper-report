@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Game } from 'src/app/interfaces/game';
 import { LeagueMatchup } from 'src/app/interfaces/league-matchup';
 import { LeagueUser } from 'src/app/interfaces/league-user';
 import { Player } from 'src/app/interfaces/player';
@@ -24,6 +25,7 @@ type PlayerMatchup = {
 })
 export class MatchupComponent implements OnChanges {
   @Input() matchup:LeagueMatchup | null = null;
+  @Input() loading = false;
   public playerMatchups:Array<PlayerMatchup> = [];
 
   constructor(public playerService:PlayerService) { }
@@ -59,7 +61,6 @@ export class MatchupComponent implements OnChanges {
     }
 
     this.playerMatchups = newPlayerMatchups;
-    console.log(newPlayerMatchups);
   }
 
   getPlayerImg(player:Player | undefined | null) {
@@ -69,8 +70,19 @@ export class MatchupComponent implements OnChanges {
 
   getPlayerPoints(starterPoints:Array<number> | undefined, idx:number):number {
     if(!starterPoints) return 0;
-    if(idx > starterPoints.length-1) return 0;
+    if(idx > starterPoints.length - 1) return 0;
     return starterPoints[idx];
+  }
+
+  getPlayerProjection(starterProjections:Array<Game> | undefined, idx:number):number {
+    if(!starterProjections) return 0;
+    if(idx > starterProjections.length - 1) return 0;
+    return starterProjections[idx].stats.pts_ppr;
+  }
+
+  getProjectedPoints(starterProjections:Array<Game> | undefined):number {
+    if(!starterProjections) return 0;
+    return starterProjections.reduce((a,b) => a + b.stats.pts_ppr, 0);
   }
 
   getPlayersForTeam(starters:Array<string>):Array<Player | undefined> {

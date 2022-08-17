@@ -48,7 +48,6 @@ export class LeaguesSidepanelComponent implements OnInit {
         })
       )
       .subscribe((value) => {
-        console.log('leagues', value);
         this.leagues = value;
         if(value.length) this.leagueSelected.emit(value[0]);
         this.loading = false;

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, filter, of, take } from 'rxjs';
+import { Game } from 'src/app/interfaces/game';
 import { Player } from 'src/app/interfaces/player';
 
 type PlayerDict = {
@@ -28,6 +29,49 @@ export class PlayerService {
     return `https://sleepercdn.com/content/nfl/players/${playerId}.jpg`;
   }
 
+  private createStringRoster(roster:Array<string>):string {
+    let stringRoster = '[';
+    roster.forEach((p, idx) => {
+      stringRoster += `"${p}"`;
+      if(idx < roster.length-1) stringRoster += ',';
+    });
+    stringRoster += ']';
+    return stringRoster;
+  }
+
+  public getPlayerStatsAndProjections(week:number, roster:Array<string>) {
+    const stringRoster = this.createStringRoster(roster);
+    const query = `query get_player_score_and_projections_batch {
+      stat: stats_for_players_in_week(sport:"nfl",season:"2022",category:"stat",season_type:"regular",week:${week},player_ids:${stringRoster}) {
+        game_id
+        opponent
+        player_id
+        stats
+        team
+        week
+        season
+      }
+      proj: stats_for_players_in_week(sport:"nfl",season:"2022",category:"proj",season_type:"regular",week:${week},player_ids:${stringRoster}) {
+        game_id
+        opponent
+        player_id
+        stats
+        team
+        week
+        season
+      }
+    }`;
+
+    return this.http.post<{ data:{ stat:Array<Game>, proj:Array<Game> }}>(
+      `https://sleeper.com/graphql`,
+      {
+        operationName: "get_player_score_and_projections_batch",
+        variables: {},
+        query
+      }
+    );
+  }
+
   private setupPlayerDict() {
     this.loading = true;
 
@@ -39,7 +83,6 @@ export class PlayerService {
       if(now - parsed.pullTime > 8.64e+7) this.getPlayers();
       else {
         this.players = parsed.players;
-        console.log('players', this.players);
         this.loading = false;
       }
 
@@ -73,7 +116,6 @@ export class PlayerService {
 
     this.players = filteredPlayers;
     if(!this.error) this.savePlayers(filteredPlayers);
-    console.log('players', this.players);
   }
 
   private savePlayers(players:PlayerDict) {

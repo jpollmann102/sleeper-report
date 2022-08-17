@@ -10,7 +10,15 @@
                 <app-league-matchups [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-league-matchups>
             </div>
             <div class="col-12 col-xl-4">
-                <app-league-divisions [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-league-divisions>
+                <div class="mb-5">
+                    <app-power-ranking [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-power-ranking>
+                </div>
+                <div class="mb-5">
+                    <app-league-tx [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-league-tx>
+                </div>
+                <div class="mb-3">
+                    <app-league-divisions [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-league-divisions>
+                </div>
             </div>
         </div>
     </ng-template>

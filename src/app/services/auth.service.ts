@@ -19,7 +19,6 @@ export class AuthService {
   }
 
   public setAuthUser(user:SleeperUser | null) {
-    console.log('auth user', user);
     this.authUser = user;
   }
 

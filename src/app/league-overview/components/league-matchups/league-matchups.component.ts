@@ -1,9 +1,11 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { catchError, of, take } from 'rxjs';
+import { catchError, forkJoin, Observable, of, take } from 'rxjs';
+import { Game } from 'src/app/interfaces/game';
 import { League } from 'src/app/interfaces/league';
 import { LeagueMatchup } from 'src/app/interfaces/league-matchup';
 import { LeagueUser } from 'src/app/interfaces/league-user';
 import { LeagueService } from '../../services/league.service';
+import { PlayerService } from '../../services/player.service';
 
 @Component({
   selector: 'app-league-matchups',
@@ -19,7 +21,8 @@ export class LeagueMatchupsComponent implements OnChanges {
   public activeWeek = this.leagueService.getCurrentWeek();
   public weeks:Array<number> = [];
 
-  constructor(public leagueService:LeagueService) { }
+  constructor(public leagueService:LeagueService,
+              private playerService:PlayerService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes && changes['league']) {
@@ -39,9 +42,10 @@ export class LeagueMatchupsComponent implements OnChanges {
   }
 
   setupLeagueWeeks(league:League | null) {
+    this.activeWeek = 1;
+    
     if(league === null) {
       this.weeks = [1];
-      this.activeWeek = 1;
       return;
     }
 
@@ -77,7 +81,6 @@ export class LeagueMatchupsComponent implements OnChanges {
       )
       .subscribe((value) => {
         this.setupMatchups(value, leagueUsers);
-        this.loading = false;
       });
   }
 
@@ -103,6 +106,10 @@ export class LeagueMatchupsComponent implements OnChanges {
           teamTwoPoints: teams[1].points!,
           teamOneStarters: teams[0].starters!,
           teamTwoStarters: teams[1].starters!,
+          teamOneStarterProjections: [],
+          teamTwoStarterProjections: [],
+          teamOneStarterStats: [],
+          teamTwoStarterStats: [],
           teamOneStartersPoints: teams[0].starters_points!,
           teamTwoStartersPoints: teams[1].starters_points!,
           teamOne,
@@ -111,7 +118,73 @@ export class LeagueMatchupsComponent implements OnChanges {
       ];
     }
 
-    this.matchups = newMatchups;
-    console.log('matchups', newMatchups);
+    this.getProjectionsAndStats(newMatchups);
+  }
+
+  getProjectionsAndStats(matchups:Array<LeagueMatchup>) {
+    const obs:Array<Observable<{ data:{ stat:Array<Game>, proj:Array<Game> }} | null>> = [];
+
+    matchups.forEach(m => {
+      const { teamOneStarters, teamTwoStarters } = m;
+      obs.push(
+        this.playerService.getPlayerStatsAndProjections(
+          this.activeWeek,
+          teamOneStarters
+        )
+          .pipe(
+            catchError((error) => {
+              console.error(error);
+              return of(null);
+            })
+          )
+      );
+      obs.push(
+        this.playerService.getPlayerStatsAndProjections(
+          this.activeWeek,
+          teamTwoStarters
+        )
+          .pipe(
+            catchError((error) => {
+              console.error(error);
+              return of(null);
+            })
+          )
+      );
+    });
+
+    forkJoin(obs)
+      .pipe(take(1))
+      .subscribe((value) => {
+        let matchupIdx = 0;
+        let matchup = matchups[0];
+        value.forEach((s, idx) => {
+          if(s === null) return;
+          const { stat, proj } = s.data;
+
+          // if not first item, and divisible by 2
+          if(idx > 0 && idx % 2 === 0) {
+            // new matchup
+            matchupIdx += 1;
+            matchup = matchups[matchupIdx];
+
+            // assign first team
+            matchup.teamOneStarterProjections = proj;
+            matchup.teamOneStarterStats = stat;
+
+          } else {
+            // if first overall item, or odd
+            if(idx % 2 === 0) {
+              matchup.teamOneStarterProjections = proj;
+              matchup.teamOneStarterStats = stat;
+            } else {
+              matchup.teamTwoStarterProjections = proj;
+              matchup.teamTwoStarterStats = stat;
+            }
+          }
+        });
+
+        this.matchups = matchups;
+        this.loading = false;
+      });
   }
 }

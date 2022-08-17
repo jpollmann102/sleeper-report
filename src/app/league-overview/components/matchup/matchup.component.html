@@ -1,4 +1,4 @@
-<app-loading-spinner *ngIf="playerService.loading || matchup === null; else matchupContent"></app-loading-spinner>
+<app-loading-spinner *ngIf="playerService.loading || loading; else matchupContent"></app-loading-spinner>
 <ng-template #matchupContent>
     <div class="bg-light p-2 rounded-2">
         <table class="table">
@@ -8,7 +8,9 @@
                         <img [src]="getTeamImg(matchup!.teamOne)" class="rounded-2" height="25px">
                         {{ getTeamName(matchup!.teamOne) }}
                     </th>
-                    <th scope="col" colspan="2"></th>
+                    <th scope="col"></th>
+                    <th scope="col" colspan="2" class="text-center">Vs</th>
+                    <th scope="col"></th>
                     <th scope="col" class="text-end">
                         {{ getTeamName(matchup!.teamTwo) }}
                         <img [src]="getTeamImg(matchup!.teamTwo)" class="rounded-2" height="25px">
@@ -26,8 +28,10 @@
                             {{ playerMatchup.playerOne?.full_name }}&nbsp;&nbsp;<span [ngClass]="getInjuryStatusStyle(playerMatchup.playerOne?.injury_status)">{{ getInjuryStatusText(playerMatchup.playerOne?.injury_status) }}</span>
                         </div>
                     </td>
-                    <td>{{ getPlayerPoints(matchup?.teamOneStartersPoints, i) }}</td>
-                    <td>{{ getPlayerPoints(matchup?.teamTwoStartersPoints, i) }}</td>
+                    <td class="text-muted">{{ getPlayerProjection(matchup?.teamOneStarterProjections, i) | number:'1.1' }}</td>
+                    <td>{{ getPlayerPoints(matchup?.teamOneStartersPoints, i) | number:'1.1' }}</td>
+                    <td>{{ getPlayerPoints(matchup?.teamTwoStartersPoints, i) | number:'1.1' }}</td>
+                    <td class="text-muted">{{ getPlayerProjection(matchup?.teamTwoStarterProjections, i) | number:'1.1' }}</td>
                     <td class="text-end">
                         <div class="fs-5">
                             <span [ngClass]="getInjuryStatusStyle(playerMatchup.playerTwo?.injury_status)">{{ getInjuryStatusText(playerMatchup.playerTwo?.injury_status) }}</span>&nbsp;&nbsp;{{ playerMatchup.playerTwo?.full_name }}
@@ -41,9 +45,11 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td class="first-col"></td>
-                    <td><b>{{ matchup?.teamOnePoints }}</b></td>
-                    <td><b>{{ matchup?.teamTwoPoints }}</b></td>
+                    <td></td>
+                    <td class="text-muted">{{ getProjectedPoints(matchup?.teamOneStarterProjections) | number:'1.1' }}</td>
+                    <td><b>{{ matchup?.teamOnePoints | number:'1.1' }}</b></td>
+                    <td><b>{{ matchup?.teamTwoPoints | number:'1.1' }}</b></td>
+                    <td class="text-muted">{{ getProjectedPoints(matchup?.teamTwoStarterProjections) | number:'1.1' }}</td>
                     <td></td>
                 </tr>
             </tfoot>

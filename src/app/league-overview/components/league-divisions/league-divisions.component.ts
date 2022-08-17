@@ -84,7 +84,6 @@ export class LeagueDivisionsComponent implements OnChanges {
     });
 
     this.divisions = divisions;
-    console.log('divisions', divisions);
   }
 
   getWinPercentage(user:LeagueUser):number {
