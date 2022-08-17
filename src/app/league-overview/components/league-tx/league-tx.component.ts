@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { catchError, forkJoin, of, take } from 'rxjs';
 import { League } from 'src/app/interfaces/league';
 import { LeagueUser } from 'src/app/interfaces/league-user';
@@ -12,7 +12,7 @@ import { PlayerService } from '../../services/player.service';
   templateUrl: './league-tx.component.html',
   styleUrls: ['./league-tx.component.scss']
 })
-export class LeagueTxComponent implements OnChanges {
+export class LeagueTxComponent implements OnChanges, OnDestroy {
   @Input() league:League | null = null;
   @Input() leagueUsers:Array<LeagueUser> = [];
   private txs:Array<Transaction> = [];
@@ -23,6 +23,11 @@ export class LeagueTxComponent implements OnChanges {
 
   constructor(private leagueService:LeagueService,
               public playerService:PlayerService) { }
+
+  ngOnDestroy(): void {
+    clearInterval(this.interval);
+    this.interval = null;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes && changes['league']) {
@@ -42,6 +47,7 @@ export class LeagueTxComponent implements OnChanges {
 
   getTransactions(league:League | null, leagueUsers:Array<LeagueUser>) {
     clearInterval(this.interval);
+    this.interval = null;
     this.shownTx = null;
     this.txs = [];
     this.shownTxIdx = 0;
@@ -67,12 +73,20 @@ export class LeagueTxComponent implements OnChanges {
       .subscribe((value) => {
         this.setupTransactions(value, leagueUsers);
         this.loading = false;
-        this.shownTx = this.txs[this.shownTxIdx];
         if(this.txs.length > 1) {
-          this.interval = setInterval(
-            () => this.updateShownTx(),
-            6000
-          );
+          this.shownTx = this.txs[this.shownTxIdx];
+          if(this.interval === null) {
+            this.interval = setInterval(
+              () => this.incrementShownTx(),
+              6000
+            );
+          } else {
+            clearInterval(this.interval);
+            this.interval = setInterval(
+              () => this.incrementShownTx(),
+              6000
+            );
+          }
         }
       });
   }
@@ -130,9 +144,10 @@ export class LeagueTxComponent implements OnChanges {
     return returnDict;
   }
 
-  updateShownTx() {
+  incrementShownTx() {
     this.shownTxIdx += 1;
-    this.shownTx = this.txs[this.shownTxIdx % this.txs.length];
+    this.shownTx = this.txs[(this.shownTxIdx % this.txs.length)];
+    console.log('shown transaction', (this.shownTxIdx % this.txs.length), this.shownTx);          
   }
 
 }
