@@ -36,7 +36,7 @@ export class LoginFormComponent implements OnInit {
           JSON.stringify(value)
         );
         this.authService.setAuthUser(value);
-        this.router.navigate(['leagues']);
+        this.router.navigate(['']);
       });
   }
 
