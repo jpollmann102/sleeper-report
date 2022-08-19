@@ -9,7 +9,6 @@ import { LeagueService } from '../../services/league.service';
 })
 export class TxComponent {
   @Input() tx:Transaction | null = null;
-  @Input() loading = false;
 
   constructor(public leagueService:LeagueService) { }
 

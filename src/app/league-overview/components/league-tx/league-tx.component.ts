@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { catchError, forkJoin, of, take } from 'rxjs';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { catchError, forkJoin, of, Subject, take, takeUntil } from 'rxjs';
 import { League } from 'src/app/interfaces/league';
 import { LeagueUser } from 'src/app/interfaces/league-user';
 import { Player } from 'src/app/interfaces/player';
@@ -12,9 +12,10 @@ import { PlayerService } from '../../services/player.service';
   templateUrl: './league-tx.component.html',
   styleUrls: ['./league-tx.component.scss']
 })
-export class LeagueTxComponent implements OnChanges, OnDestroy {
+export class LeagueTxComponent implements OnChanges, OnDestroy, OnInit {
   @Input() league:League | null = null;
   @Input() leagueUsers:Array<LeagueUser> = [];
+  private readonly $destroy = new Subject<void>();
   private txs:Array<Transaction> = [];
   private shownTxIdx = 0;
   public shownTx:Transaction | null = null;
@@ -22,30 +23,45 @@ export class LeagueTxComponent implements OnChanges, OnDestroy {
   private interval:any = null;
 
   constructor(private leagueService:LeagueService,
-              public playerService:PlayerService) { }
+              public playerService:PlayerService) {
+    this.playerService.playersLoaded
+      .pipe(takeUntil(this.$destroy))
+      .subscribe(value => this.getTransactions(this.league, this.leagueUsers))
+  }
+
+  ngOnInit(): void {
+    if(!this.playerService.loading) this.getTransactions(
+      this.league,
+      this.leagueUsers
+    );
+  }
 
   ngOnDestroy(): void {
     clearInterval(this.interval);
     this.interval = null;
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes && changes['league']) {
-      this.getTransactions(
+      if(!this.playerService.loading) this.getTransactions(
         changes['league'].currentValue,
         this.leagueUsers
       );
     }
 
     if(changes && changes['leagueUsers']) {
-      this.getTransactions(
+      if(!this.playerService.loading) this.getTransactions(
         this.league,
         changes['leagueUsers'].currentValue
-      )
+      );
     }
   }
 
   getTransactions(league:League | null, leagueUsers:Array<LeagueUser>) {
+    if(this.playerService.loading) return;
+
     clearInterval(this.interval);
     this.interval = null;
     this.shownTx = null;
@@ -101,7 +117,7 @@ export class LeagueTxComponent implements OnChanges, OnDestroy {
         ];
       });
     });
-    allTx = allTx.sort((a,b) => a.created - b.created);
+    allTx = allTx.sort((a,b) => b.created - a.created);
     this.txs = allTx.map(tx => {
       return {
         ...tx,
@@ -145,9 +161,11 @@ export class LeagueTxComponent implements OnChanges, OnDestroy {
   }
 
   incrementShownTx() {
-    this.shownTxIdx += 1;
-    this.shownTx = this.txs[(this.shownTxIdx % this.txs.length)];
-    console.log('shown transaction', (this.shownTxIdx % this.txs.length), this.shownTx);          
+    if(this.txs.length === 0) this.shownTx = null;
+    else {
+      this.shownTxIdx += 1;
+      this.shownTx = this.txs[(this.shownTxIdx % this.txs.length)];
+    }
   }
 
 }

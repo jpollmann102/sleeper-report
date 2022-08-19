@@ -9,6 +9,9 @@
     </div>
 </div>
 <hr>
-<div class="mb-3" *ngFor="let matchup of matchups">
-    <app-matchup [matchup]="matchup" [loading]="loading"></app-matchup>
-</div>
+<app-loading-spinner *ngIf="playerService.loading; else matchupsContent"></app-loading-spinner>
+<ng-template #matchupsContent>
+    <div class="mb-3" *ngFor="let matchup of matchups">
+        <app-matchup [matchup]="matchup" [loading]="loading"></app-matchup>
+    </div>
+</ng-template>

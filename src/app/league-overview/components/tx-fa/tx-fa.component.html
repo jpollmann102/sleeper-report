@@ -1,4 +1,7 @@
 <ng-container *ngIf="tx">
+    <div class="mb-2">
+        <small>Free agent add/drop</small>
+    </div>
     <div *ngFor="let add of tx.playerAdds | keyvalue">
         <app-tx-player [player]="add.value" type="add"></app-tx-player>
     </div>

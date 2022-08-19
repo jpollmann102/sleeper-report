@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, filter, of, take } from 'rxjs';
+import { catchError, filter, of, Subject, take } from 'rxjs';
 import { Game } from 'src/app/interfaces/game';
 import { Player } from 'src/app/interfaces/player';
 
@@ -16,6 +16,8 @@ export class PlayerService {
   private players:PlayerDict = {};
   private error = false;
   public loading = false;
+
+  public playersLoaded = new Subject<void>();
 
   constructor(private http:HttpClient) {
     this.setupPlayerDict();
@@ -78,12 +80,12 @@ export class PlayerService {
     const fromStorage = localStorage.getItem(this.token);
     if(fromStorage) {
       const parsed = JSON.parse(fromStorage);
-
       const now = Date.now();
-      if(now - parsed.pullTime > 8.64e+7) this.getPlayers();
+      if((now - Number(parsed.pullTime)) > 8.64e+7) this.getPlayers();
       else {
         this.players = parsed.players;
         this.loading = false;
+        this.playersLoaded.next();
       }
 
     } else this.getPlayers();
@@ -102,6 +104,7 @@ export class PlayerService {
       .subscribe((value) => {
         this.filterPlayers(value);
         this.loading = false;
+        this.playersLoaded.next();
       });
   }
 

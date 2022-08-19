@@ -1,2 +1,5 @@
 <h5>League Transactions</h5>
-<app-tx [tx]="shownTx" [loading]="playerService.loading || loading"></app-tx>
+<app-loading-spinner *ngIf="playerService.loading || loading; else txContent"></app-loading-spinner>
+<ng-template #txContent>
+    <app-tx [tx]="shownTx"></app-tx>
+</ng-template>

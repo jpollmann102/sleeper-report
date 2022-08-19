@@ -1,9 +1,9 @@
-<div *ngIf="player" class="d-flex">
+<div *ngIf="player; else schmuckContent" class="d-flex">
     <h3><i class="bi" [ngClass]="{
         'bi-plus-circle text-success': type === 'add',
         'bi-dash-circle text-danger': type === 'drop'
     }"></i></h3>
-    <img [src]="player.imgLink" width="75px" height="60px">
+    <img [src]="player.imgLink" width="76px" height="50px" class="rounded">
     <div class="flex-column">
         <div class="fs-6">{{ player.full_name }}</div>
         <div class="d-flex">
@@ -12,3 +12,12 @@
         </div>
     </div>
 </div>
+<ng-template #schmuckContent>
+    <div class="d-flex">
+        <h3 class="me-3"><i class="bi" [ngClass]="{
+            'bi-plus-circle text-success': type === 'add',
+            'bi-dash-circle text-danger': type === 'drop'
+        }"></i></h3>
+        <small>Some schmuck, so bad they are filtered out of the player set on this site</small>
+    </div>
+</ng-template>
