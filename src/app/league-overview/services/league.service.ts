@@ -6,6 +6,7 @@ import { LeagueMatchup } from 'src/app/interfaces/league-matchup';
 import { LeagueRoster } from 'src/app/interfaces/league-roster';
 import { LeagueUser } from 'src/app/interfaces/league-user';
 import { NflInfo } from 'src/app/interfaces/nfl-info';
+import { OtbPlayer } from 'src/app/interfaces/otb-player';
 import { Transaction } from 'src/app/interfaces/transaction';
 
 @Injectable({
@@ -59,6 +60,26 @@ export class LeagueService {
 
   public getLeagueRosters(leagueId:string):Observable<Array<LeagueRoster>> {
     return this.http.get<Array<LeagueRoster>>(`https://api.sleeper.app/v1/league/${leagueId}/rosters`);
+  }
+
+  public getLeagueTradeblock(leagueId:string):Observable<{ data:{ league_players:Array<OtbPlayer> } }> {
+    const query = `
+      query league_players {
+        league_players(league_id: "${leagueId}"){
+            player_id
+            settings
+        }
+      }
+    `;
+
+    return this.http.post<{ data:{ league_players:Array<OtbPlayer> } }>(
+      'https://sleeper.com/graphql',
+      {
+        operationName: 'league_players',
+        variables: {},
+        query
+      }
+    );
   }
 
   private getNflInfo() {
