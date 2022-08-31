@@ -41,15 +41,18 @@ export class LeagueTxComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes && changes['league']) {
-      this.getTransactions(
-        changes['league'].currentValue,
-        this.leagueUsers
-      );
-    }
-
-    if(changes && changes['leagueUsers']) {
-      this.getTransactions(
+    if(changes) {
+      if(changes['league'] && changes['leagueUsers']) {
+        this.getTransactions(
+          changes['league'].currentValue,
+          changes['leagueUsers'].currentValue
+        );
+      } else if(changes['league']) {
+        this.getTransactions(
+          changes['league'].currentValue,
+          this.leagueUsers
+        );
+      } else this.getTransactions(
         this.league,
         changes['leagueUsers'].currentValue
       );
@@ -150,8 +153,7 @@ export class LeagueTxComponent implements OnChanges, OnDestroy, OnInit {
         const playerMatch = players.find(p => p && p.player_id === pId);
         if(playerMatch) {
           returnDict[Number(pId)] = { 
-            ...playerMatch, 
-            imgLink: this.playerService.getPlayerImg(pId), 
+            ...playerMatch,
             teamImgLink: this.leagueService.getTeamLogo(playerMatch.team)
           };
         } else returnDict[Number(pId)] = null;

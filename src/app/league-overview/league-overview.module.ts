@@ -22,6 +22,8 @@ import { TxWaiverComponent } from './components/tx-waiver/tx-waiver.component';
 import { TxTradeComponent } from './components/tx-trade/tx-trade.component';
 import { TxPlayerComponent } from './components/tx-player/tx-player.component';
 import { LeagueOtbComponent } from './components/league-otb/league-otb.component';
+import { UserTradeBlockComponent } from './components/user-trade-block/user-trade-block.component';
+import { TradeBlockPlayerComponent } from './components/trade-block-player/trade-block-player.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,8 @@ import { LeagueOtbComponent } from './components/league-otb/league-otb.component
     TxTradeComponent,
     TxPlayerComponent,
     LeagueOtbComponent,
+    UserTradeBlockComponent,
+    TradeBlockPlayerComponent,
   ],
   imports: [
     CommonModule,

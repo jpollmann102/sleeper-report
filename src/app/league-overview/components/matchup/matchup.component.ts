@@ -70,7 +70,7 @@ export class MatchupComponent implements OnChanges {
   }
 
   getPlayerImg(player:Player | undefined | null) {
-    if(player) return this.playerService.getPlayerImg(player.player_id);
+    if(player) return player.imgLink;
     return 'assets/football-helmet.png';
   }
 

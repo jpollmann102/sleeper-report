@@ -44,19 +44,26 @@ export class PlayerService implements OnDestroy {
     const fsPlayers = await lastValueFrom(
       this.getFirestorePlayer(notFoundPlayers)
     );
+    const withImgLink = fsPlayers.players.map(fsp => {
+      if(fsp === null) return null;
+      return {
+        ...fsp,
+        imgLink: this.getPlayerImg(fsp.player_id),
+      };
+    });
     notFoundPlayers.forEach(
       pId => this.setPlayerCache(
         pId, 
-        fsPlayers.players.find(fsp => fsp !== null && Number(fsp.player_id) === pId)
+        withImgLink.find(fsp => fsp !== null && Number(fsp.player_id) === pId)
       )
     );
     return Promise.all<Array<Player | null | undefined>>([
       ...cachedPlayers,
-      ...fsPlayers.players,
+      ...withImgLink,
     ]);
   }
 
-  public getPlayerImg(playerId:string) {
+  private getPlayerImg(playerId:string) {
     return `https://sleepercdn.com/content/nfl/players/${playerId}.jpg`;
   }
 

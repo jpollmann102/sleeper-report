@@ -15,22 +15,25 @@ export class LeagueOtbComponent implements OnChanges {
   @Input() league:League | null = null;
   @Input() leagueUsers:Array<LeagueUser> = [];
   public loading = false;
-  public otbPlayers:Array<OtbPlayer> = [];
+  public leagueUserBlocks:Array<Array<OtbPlayer>> = [];
+
 
   constructor(private playerService:PlayerService, 
               private leagueService:LeagueService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
-    if(changes && changes['league']) {
-      this.getLeagueOtb(
-        changes['league'].currentValue,
-        this.leagueUsers
-      );
-    }
-    
-    if(changes && changes['leagueUsers']) {
-      this.getLeagueOtb(
+    if(changes) {
+      if(changes['league'] && changes['leagueUsers']) {
+        this.getLeagueOtb(
+          changes['league'].currentValue,
+          changes['leagueUsers'].currentValue
+        );
+      } else if(changes['league']) {
+        this.getLeagueOtb(
+          changes['league'].currentValue,
+          this.leagueUsers
+        );
+      } else this.getLeagueOtb(
         this.league,
         changes['leagueUsers'].currentValue
       );
@@ -52,9 +55,8 @@ export class LeagueOtbComponent implements OnChanges {
         })
       )
       .subscribe(async (value) => {
-        console.log('league trade block', value);
         if(value) await this.setupTradeblock(value.data.league_players, leagueUsers);
-        else this.otbPlayers = [];
+        else this.leagueUserBlocks = [];
 
         this.loading = false;
       });
@@ -65,25 +67,31 @@ export class LeagueOtbComponent implements OnChanges {
     const otbPlayerIds = otbItems.map(p => p.player_id).filter(pId => pId.split(',').length === 1);
 
     const players = await this.playerService.getPlayers(otbPlayerIds.map(k => Number(k)));
-    console.log('otb players', players);
 
+    let finalOtbPlayers:Array<OtbPlayer> = [];
     otbItems.forEach((p) => {
       let leagueUser = null;
       let draftPick = null;
       let player = null;
-      const playerId = p.player_id.split(',')[0];
-      const isDraftPick = p.player_id.split(',').length > 1;
+      const splitPlayerId = p.player_id.split(',');
+      const playerId = splitPlayerId[0];
+      const isDraftPick = splitPlayerId.length > 1;
 
-      if(isDraftPick) draftPick = `${playerId[1]} round ${playerId[2]} pick`;
-      else {
+      if(isDraftPick) {
+        const year = splitPlayerId[1];
+        const round = splitPlayerId[2];
+        const pick = splitPlayerId[0];
+
+        draftPick = `${year} round ${round} pick ${pick}`;
+      } else {
         const playerMatch = players.find(p => p && p.player_id === playerId);
         player = playerMatch ? playerMatch : null;
       }
 
       leagueUser = leagueUsers.find(lu => lu.roster.roster_id === p.settings.otb);
 
-      this.otbPlayers = [
-        ...this.otbPlayers,
+      finalOtbPlayers = [
+        ...finalOtbPlayers,
         {
           ...p,
           isDraftPick,
@@ -94,7 +102,22 @@ export class LeagueOtbComponent implements OnChanges {
       ];
     });
 
-    console.log(this.otbPlayers);
+    console.log('otb players', finalOtbPlayers);
+    this.createTeamTradeBlocks(finalOtbPlayers);
   };
+
+  createTeamTradeBlocks(otbPlayers:Array<OtbPlayer>) {
+    const leagueUserIds = new Set(otbPlayers.map(otbp => otbp.leagueUser?.user_id));
+    let userBlocks:Array<Array<OtbPlayer>> = [];
+    leagueUserIds.forEach(uid => {
+      userBlocks = [
+        ...userBlocks,
+        otbPlayers.filter(otbp => otbp.leagueUser?.user_id === uid),
+      ];
+    });
+
+    this.leagueUserBlocks = userBlocks;
+    console.log('league user blocks', userBlocks);
+  }
 
 }

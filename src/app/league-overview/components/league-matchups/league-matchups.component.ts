@@ -25,16 +25,18 @@ export class LeagueMatchupsComponent implements OnChanges {
               private playerService:PlayerService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes && changes['league']) {
-      this.getMatchups(
-        changes['league'].currentValue,
-        this.leagueUsers
-      );
-      this.setupLeagueWeeks(changes['league'].currentValue);
-    }
-
-    if(changes && changes['leagueUsers']) {
-      this.getMatchups(
+    if(changes) {
+      if(changes['league'] && changes['leagueUsers']) {
+        this.getMatchups(
+          changes['league'].currentValue,
+          changes['leagueUsers'].currentValue
+        );
+      } else if(changes['league']) {
+        this.getMatchups(
+          changes['league'].currentValue,
+          this.leagueUsers
+        );
+      } else this.getMatchups(
         this.league,
         changes['leagueUsers'].currentValue
       );

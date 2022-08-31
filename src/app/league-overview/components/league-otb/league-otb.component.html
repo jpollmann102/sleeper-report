@@ -1,5 +1,10 @@
 <h5>The Trading Block</h5>
 <app-loading-spinner *ngIf="loading; else otbContent"></app-loading-spinner>
 <ng-template #otbContent>
-    
+    <div class="bg-light p-3">
+        <app-user-trade-block 
+            *ngFor="let userBlock of leagueUserBlocks" 
+            [userBlock]="userBlock"
+        ></app-user-trade-block>
+    </div>
 </ng-template>

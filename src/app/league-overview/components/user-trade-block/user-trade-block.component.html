@@ -1,0 +1,11 @@
+<div *ngIf="leagueUser">
+    <h5>{{ getUserName() }}</h5>
+    <div class="row mb-3 gy-2">
+        <div *ngFor="let player of userBlock" class="col-12 col-lg-6">
+            <app-trade-block-player 
+                [player]="player.player" 
+                [draftPick]="player.draftPick"
+            ></app-trade-block-player>
+        </div>
+    </div>
+</div>
