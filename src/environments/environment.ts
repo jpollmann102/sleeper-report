@@ -8,7 +8,7 @@ export const environment = {
     appId: '1:387125652898:web:97b45086e494f60e4656fb',
     storageBucket: 'sleeper-report.appspot.com',
     locationId: 'us-central',
-    apiKey: 'AIzaSyBUFrvFMJ_97odSIzHfQcwbgneHAmlq6Ac',
+    apiKey: '',
     authDomain: 'sleeper-report.firebaseapp.com',
     messagingSenderId: '387125652898',
     measurementId: 'G-6PRMFFRZ8E',
