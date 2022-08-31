@@ -41,7 +41,6 @@ export class LeagueOtbComponent implements OnChanges {
   }
 
   getLeagueOtb(league:League | null, leagueUsers:Array<LeagueUser>) {
-    console.log('getting league block', league, leagueUsers);
     if(league === null || leagueUsers.length === 0) return;
 
     this.loading = true;
@@ -102,7 +101,6 @@ export class LeagueOtbComponent implements OnChanges {
       ];
     });
 
-    console.log('otb players', finalOtbPlayers);
     this.createTeamTradeBlocks(finalOtbPlayers);
   };
 
@@ -117,7 +115,6 @@ export class LeagueOtbComponent implements OnChanges {
     });
 
     this.leagueUserBlocks = userBlocks;
-    console.log('league user blocks', userBlocks);
   }
 
 }

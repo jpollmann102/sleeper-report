@@ -37,7 +37,6 @@ export class MatchupComponent implements OnChanges {
   }
 
   async setupMatchup(matchup:LeagueMatchup | null) {
-    console.log('setting up matchup', matchup);
     if(matchup === null) {
       this.playerMatchups = [];
       return;

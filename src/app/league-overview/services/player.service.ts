@@ -111,10 +111,8 @@ export class PlayerService implements OnDestroy {
   }
 
   private setupPlayerMap() {
-    console.log('setting up player cache');
     const fromStorage = localStorage.getItem(this.token);
     if(fromStorage) {
-      console.log('from storage');
       const parsed = JSON.parse(fromStorage);
       const now = new Date(
         new Date().toLocaleString('en-US', {
@@ -128,7 +126,6 @@ export class PlayerService implements OnDestroy {
       // or the cached time was not before today's run
       // then set the cache
       if(!isAfter(now, todayRun) || !isBefore(cachedTime, todayRun)) {
-        console.log('use cache');
         this.cacheMap = new Map(parsed.cacheMap);
         this.cacheTime = cachedTime.toLocaleDateString('en-US', {
           timeZone: 'America/New_York'
@@ -136,13 +133,11 @@ export class PlayerService implements OnDestroy {
       }
     }
 
-    console.log('player cache map', this.cacheMap);
   }
 
   private setPlayerCache(playerId:number, player:Player | undefined | null) {
     if(player) {
       this.cacheMap.set(playerId, player);
-      console.log('player cached', player);
     }
   }
 
