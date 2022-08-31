@@ -103,6 +103,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "sleeper-report:build:production",
+            "firebaseProject": "sleeper-report",
+            "firebaseHostingSite": "sleeper-report"
+          }
         }
       }
     }

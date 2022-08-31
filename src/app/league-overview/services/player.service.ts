@@ -1,30 +1,59 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { catchError, filter, of, Subject, take } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { lastValueFrom, Observable } from 'rxjs';
 import { Game } from 'src/app/interfaces/game';
+import { AngularFireFunctions } from '@angular/fire/compat/functions';
 import { Player } from 'src/app/interfaces/player';
-
-type PlayerDict = {
-  [key:string]:Player,
-};
+import { HttpClient } from '@angular/common/http';
+import { isBefore, isAfter } from 'date-fns';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PlayerService {
+export class PlayerService implements OnDestroy {
   private token = 'sleeper-report-players';
-  private players:PlayerDict = {};
-  private error = false;
-  public loading = false;
+  private cacheMap = new Map<number, Player>();
+  private cacheTime = '';
 
-  public playersLoaded = new Subject<void>();
-
-  constructor(private http:HttpClient) {
-    this.setupPlayerDict();
+  constructor(private fns:AngularFireFunctions,
+              private http:HttpClient) {                
+    window.onbeforeunload = () => this.ngOnDestroy();
+    this.setupPlayerMap();
   }
 
-  public getPlayer(playerId:number):Player | undefined {
-    return this.players[playerId];
+  ngOnDestroy(): void {
+    this.saveCacheMap();
+  }
+
+  private saveCacheMap() {
+    localStorage.setItem(
+      this.token, 
+      JSON.stringify({
+        cacheMap: Array.from(this.cacheMap),
+        cacheTime: this.cacheTime ? this.cacheTime : new Date().toLocaleString('en-US', {
+          timeZone: 'America/New_York'
+        }),
+      })
+    );
+  }
+
+  async getPlayers(playerIds:Array<number>) {
+    const cachedPlayers = playerIds
+      .map(id => this.cacheMap.get(id))
+      .filter(p => p !== undefined);
+    const notFoundPlayers = playerIds.filter(id => !cachedPlayers.find(p => Number(p!.player_id!) === id));
+    const fsPlayers = await lastValueFrom(
+      this.getFirestorePlayer(notFoundPlayers)
+    );
+    notFoundPlayers.forEach(
+      pId => this.setPlayerCache(
+        pId, 
+        fsPlayers.players.find(fsp => fsp !== null && Number(fsp.player_id) === pId)
+      )
+    );
+    return Promise.all<Array<Player | null | undefined>>([
+      ...cachedPlayers,
+      ...fsPlayers.players,
+    ]);
   }
 
   public getPlayerImg(playerId:string) {
@@ -74,58 +103,45 @@ export class PlayerService {
     );
   }
 
-  private setupPlayerDict() {
-    this.loading = true;
-
+  private setupPlayerMap() {
+    console.log('setting up player cache');
     const fromStorage = localStorage.getItem(this.token);
     if(fromStorage) {
+      console.log('from storage');
       const parsed = JSON.parse(fromStorage);
-      const now = Date.now();
-      if((now - Number(parsed.pullTime)) > 8.64e+7) this.getPlayers();
-      else {
-        this.players = parsed.players;
-        this.loading = false;
-        this.playersLoaded.next();
-      }
-
-    } else this.getPlayers();
-  }
-
-  private getPlayers() {
-    this.http.get<PlayerDict>('https://api.sleeper.app/v1/players/nfl')
-      .pipe(
-        take(1),
-        catchError((error) => {
-          console.error(error);
-          this.error = true;
-          return of({});
+      const now = new Date(
+        new Date().toLocaleString('en-US', {
+          timeZone: 'America/New_York'
         })
-      )
-      .subscribe((value) => {
-        this.filterPlayers(value);
-        this.loading = false;
-        this.playersLoaded.next();
-      });
+      );
+      const cachedTime = new Date(parsed.cacheTime);
+      const todayRun = new Date(now.setHours(1, 30));
+      
+      // if right now is not after today's run
+      // or the cached time was not before today's run
+      // then set the cache
+      if(!isAfter(now, todayRun) || !isBefore(cachedTime, todayRun)) {
+        console.log('use cache');
+        this.cacheMap = new Map(parsed.cacheMap);
+        this.cacheTime = cachedTime.toLocaleDateString('en-US', {
+          timeZone: 'America/New_York'
+        });
+      }
+    }
+
+    console.log('player cache map', this.cacheMap);
   }
 
-  private filterPlayers(players:PlayerDict) {
-    const filteredPlayers:PlayerDict = {};
-
-    for(let player in players) {
-      if(players[player].search_rank < 301) filteredPlayers[player] = {
-        ...players[player],
-      };
-    };
-
-    this.players = filteredPlayers;
-    if(!this.error) this.savePlayers(filteredPlayers);
+  private setPlayerCache(playerId:number, player:Player | undefined | null) {
+    if(player) {
+      this.cacheMap.set(playerId, player);
+      console.log('player cached', player);
+    }
   }
 
-  private savePlayers(players:PlayerDict) {
-    const savedPlayerData = {
-      players,
-      pullTime: Date.now(),
-    };
-    localStorage.setItem(this.token, JSON.stringify(savedPlayerData));
+  private getFirestorePlayer(playerIds:Array<number>):Observable<{ players:Array<Player | null> }> {
+    const callable = this.fns.httpsCallable('getPlayerInfo');
+    return callable({ playerIds });
   }
 }
+

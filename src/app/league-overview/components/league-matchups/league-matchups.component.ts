@@ -22,7 +22,7 @@ export class LeagueMatchupsComponent implements OnChanges {
   public weeks:Array<number> = [];
 
   constructor(public leagueService:LeagueService,
-              public playerService:PlayerService) { }
+              private playerService:PlayerService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes && changes['league']) {

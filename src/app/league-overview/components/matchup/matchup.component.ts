@@ -28,7 +28,7 @@ export class MatchupComponent implements OnChanges {
   @Input() loading = false;
   public playerMatchups:Array<PlayerMatchup> = [];
 
-  constructor(public playerService:PlayerService) { }
+  constructor(private playerService:PlayerService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes && changes['matchup']) {
@@ -36,21 +36,26 @@ export class MatchupComponent implements OnChanges {
     }
   }
 
-  setupMatchup(matchup:LeagueMatchup | null) {
+  async setupMatchup(matchup:LeagueMatchup | null) {
+    console.log('setting up matchup', matchup);
     if(matchup === null) {
       this.playerMatchups = [];
       return;
     }
 
-    let newPlayerMatchups:Array<PlayerMatchup> = [];
+    this.loading = true;
+    const teamOneStarters = await this.playerService.getPlayers(
+      matchup.teamOneStarters.map(sId => Number(sId))
+    );
+    const teamTwoStarters = await this.playerService.getPlayers(
+      matchup.teamTwoStarters.map(sId => Number(sId))
+    );
 
-    const teamOnePlayers = this.getPlayersForTeam(matchup.teamOneStarters);
-    const teamTwoPlayers = this.getPlayersForTeam(matchup.teamTwoStarters);
-    
-    const maxLen = Math.max(teamOnePlayers.length, teamTwoPlayers.length);
+    let newPlayerMatchups:Array<PlayerMatchup> = [];
+    const maxLen = Math.max(teamOneStarters.length, teamTwoStarters.length);
     for(let i = 0; i < maxLen; i++) {
-      const playerOne = teamOnePlayers.length >= i+1 ? teamOnePlayers[i] : null;
-      const playerTwo = teamTwoPlayers.length >= i+1 ? teamTwoPlayers[i] : null;
+      const playerOne = teamOneStarters.length >= i+1 ? teamOneStarters[i] : null;
+      const playerTwo = teamTwoStarters.length >= i+1 ? teamTwoStarters[i] : null;
       newPlayerMatchups = [
         ...newPlayerMatchups,
         {
@@ -61,6 +66,7 @@ export class MatchupComponent implements OnChanges {
     }
 
     this.playerMatchups = newPlayerMatchups;
+    this.loading = false;
   }
 
   getPlayerImg(player:Player | undefined | null) {
@@ -83,10 +89,6 @@ export class MatchupComponent implements OnChanges {
   getProjectedPoints(starterProjections:Array<Game> | undefined):number {
     if(!starterProjections) return 0;
     return starterProjections.reduce((a,b) => a + b.stats.pts_ppr, 0);
-  }
-
-  getPlayersForTeam(starters:Array<string>):Array<Player | undefined> {
-    return starters.map(s => this.playerService.getPlayer(Number(s)));
   }
 
   getTeamName(roster:LeagueUser) {

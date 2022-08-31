@@ -21,8 +21,9 @@ export class LeagueService {
     this.getNflInfo();
   }
 
-  public getTeamLogo(teamName:string) {
-    return `https://sleepercdn.com/images/team_logos/nfl/${teamName.toLowerCase()}.png`;
+  public getTeamLogo(teamName:string | null) {
+    if(teamName) return `https://sleepercdn.com/images/team_logos/nfl/${teamName.toLowerCase()}.png`;
+    else return '';
   }
 
   public getCurrentSeason() {

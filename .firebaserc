@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "sleeper-report"
+  },
+  "targets": {
+    "sleeper-report": {
+      "hosting": {
+        "sleeper-report": [
+          "sleeper-report"
+        ]
+      }
+    }
   }
 }

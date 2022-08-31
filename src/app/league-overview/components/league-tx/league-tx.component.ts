@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { catchError, forkJoin, of, Subject, take, takeUntil } from 'rxjs';
+import { catchError, forkJoin, of, Subject, take } from 'rxjs';
 import { League } from 'src/app/interfaces/league';
 import { LeagueUser } from 'src/app/interfaces/league-user';
 import { Player } from 'src/app/interfaces/player';
@@ -23,14 +23,10 @@ export class LeagueTxComponent implements OnChanges, OnDestroy, OnInit {
   private interval:any = null;
 
   constructor(private leagueService:LeagueService,
-              public playerService:PlayerService) {
-    this.playerService.playersLoaded
-      .pipe(takeUntil(this.$destroy))
-      .subscribe(value => this.getTransactions(this.league, this.leagueUsers))
-  }
+              private playerService:PlayerService) { }
 
   ngOnInit(): void {
-    if(!this.playerService.loading) this.getTransactions(
+    this.getTransactions(
       this.league,
       this.leagueUsers
     );
@@ -45,14 +41,14 @@ export class LeagueTxComponent implements OnChanges, OnDestroy, OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes && changes['league']) {
-      if(!this.playerService.loading) this.getTransactions(
+      this.getTransactions(
         changes['league'].currentValue,
         this.leagueUsers
       );
     }
 
     if(changes && changes['leagueUsers']) {
-      if(!this.playerService.loading) this.getTransactions(
+      this.getTransactions(
         this.league,
         changes['leagueUsers'].currentValue
       );
@@ -60,8 +56,6 @@ export class LeagueTxComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   getTransactions(league:League | null, leagueUsers:Array<LeagueUser>) {
-    if(this.playerService.loading) return;
-
     clearInterval(this.interval);
     this.interval = null;
     this.shownTx = null;
@@ -86,8 +80,8 @@ export class LeagueTxComponent implements OnChanges, OnDestroy, OnInit {
           return of([]);
         })
       )
-      .subscribe((value) => {
-        this.setupTransactions(value, leagueUsers);
+      .subscribe(async (txs) => {
+        this.txs = await this.setupTransactions(txs, leagueUsers);
         this.loading = false;
         if(this.txs.length > 1) {
           this.shownTx = this.txs[this.shownTxIdx];
@@ -107,7 +101,7 @@ export class LeagueTxComponent implements OnChanges, OnDestroy, OnInit {
       });
   }
 
-  setupTransactions(txs:Array<Array<Transaction>>, leagueUsers:Array<LeagueUser>) {
+  async setupTransactions(txs:Array<Array<Transaction>>, leagueUsers:Array<LeagueUser>):Promise<Array<Transaction>> {
     let allTx:Array<Transaction> = [];
     txs.forEach(wtx => {
       wtx.forEach(tx => {
@@ -118,34 +112,48 @@ export class LeagueTxComponent implements OnChanges, OnDestroy, OnInit {
       });
     });
     allTx = allTx.sort((a,b) => b.created - a.created);
-    this.txs = allTx.map(tx => {
-      return {
-        ...tx,
-        creatorUser: leagueUsers.find(lu => lu.user_id === tx.creator),
-        leagueUserAdds: this.convertLeagueUserDict(tx.adds, leagueUsers),
-        leagueUserDrops: this.convertLeagueUserDict(tx.drops, leagueUsers),
-        playerAdds: this.convertPlayerDict(tx.adds),
-        playerDrops: this.convertPlayerDict(tx.drops),
-      };
-    });
-  }
-
-  convertPlayerDict(dict:{ [key:number]:number } | null) {
-    if(dict === null) return null;
-
-    let returnDict:{ [key:number]:Player | null } = {};
-    for(let playerId in dict) {
-      const playerMatch = this.playerService.getPlayer(Number(playerId));
-      if(playerMatch) {
-        returnDict[playerId] = { 
-          ...playerMatch, 
-          imgLink: this.playerService.getPlayerImg(playerId), 
-          teamImgLink: this.leagueService.getTeamLogo(playerMatch.team) 
-        };
-      } else returnDict[playerId] = null;
+    let finalTx:Array<Transaction> = [];
+    for(let i = 0; i < allTx.length; i++) {
+      const tx = allTx[i];
+      const playerAdds = await this.convertPlayerDict(tx.adds);
+      const playerDrops = await this.convertPlayerDict(tx.drops);
+      finalTx = [
+        ...finalTx,
+        {
+          ...tx,
+          playerAdds,
+          playerDrops, 
+          creatorUser: leagueUsers.find(lu => lu.user_id === tx.creator),
+          leagueUserAdds: this.convertLeagueUserDict(tx.adds, leagueUsers),
+          leagueUserDrops: this.convertLeagueUserDict(tx.drops, leagueUsers),
+        },
+      ];
     }
 
-    return returnDict;
+    return new Promise((resolve, reject) => resolve(finalTx));
+  }
+
+  async convertPlayerDict(dict:{ [key:number]:number } | null):Promise<{ [key:number]:Player | null } | null> {
+    if(dict === null) return new Promise((resolve, reject) => resolve(null));
+
+    return new Promise(async (resolve, reject) => {
+      let returnDict:{ [key:number]:Player | null } = {};
+      const playerIds = Object.keys(dict);
+      const players = await this.playerService.getPlayers(playerIds.map(k => Number(k)));
+      playerIds.forEach((pId) => {
+        const playerMatch = players.find(p => p && p.player_id === pId);
+        if(playerMatch) {
+          returnDict[Number(pId)] = { 
+            ...playerMatch, 
+            imgLink: this.playerService.getPlayerImg(pId), 
+            teamImgLink: this.leagueService.getTeamLogo(playerMatch.team)
+          };
+        } else returnDict[Number(pId)] = null;
+      });
+
+      resolve(returnDict);
+    });
+
   }
 
   convertLeagueUserDict(dict:{ [key:number]:number } | null, leagueUsers:Array<LeagueUser>) {

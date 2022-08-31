@@ -9,7 +9,7 @@
     </div>
 </div>
 <hr>
-<app-loading-spinner *ngIf="playerService.loading; else matchupsContent"></app-loading-spinner>
+<app-loading-spinner *ngIf="loading; else matchupsContent"></app-loading-spinner>
 <ng-template #matchupsContent>
     <div class="mb-3" *ngFor="let matchup of matchups">
         <app-matchup [matchup]="matchup" [loading]="loading"></app-matchup>
