@@ -6,6 +6,7 @@ import { Player } from 'src/app/interfaces/player';
 import { Transaction } from 'src/app/interfaces/transaction';
 import { LeagueService } from '../../services/league.service';
 import { PlayerService } from '../../services/player.service';
+import { differenceInDays } from 'date-fns';
 
 @Component({
   selector: 'app-league-tx',
@@ -111,6 +112,11 @@ export class LeagueTxComponent implements OnChanges, OnDestroy, OnInit {
         ];
       });
     });
+    allTx = allTx.filter(tx => {
+      const asDate = new Date(tx.created);
+      const now = new Date();
+      return differenceInDays(now, asDate) < 15;
+    })
     allTx = allTx.sort((a,b) => b.created - a.created);
     let finalTx:Array<Transaction> = [];
     for(let i = 0; i < allTx.length; i++) {
