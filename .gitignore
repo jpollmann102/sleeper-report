@@ -57,3 +57,5 @@ functions/sleeper-report-firebase-adminsdk-1ma6t-a75e15b53e.json
 .firebase
 *-debug.log
 .runtimeconfig.json
+src/environments/environment.prod.ts
+src/environments/environment.ts
