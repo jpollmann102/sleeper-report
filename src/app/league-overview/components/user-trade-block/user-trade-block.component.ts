@@ -19,6 +19,11 @@ export class UserTradeBlockComponent implements OnChanges {
     }
   }
 
+  getPicture() {
+    if(this.leagueUser?.metadata.avatar) return this.leagueUser.metadata.avatar;
+    else return 'assets/football-helmet.png';
+  }
+
   setupUserBlock(userBlock:Array<OtbPlayer>) {
     if(userBlock.length > 0) this.leagueUser = userBlock[0].leagueUser;
     else this.leagueUser = null;

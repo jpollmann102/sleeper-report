@@ -1,0 +1,36 @@
+<h5>League Studs</h5>
+<div class="bg-light p-2 mb-3 rounded-2">
+    <table class="table">
+        <thead>
+            <th scope="col">Team</th>
+            <th scope="col">FPTS</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let player of leagueLeadersHi">
+                <td>
+                    <img [src]="player.metadata.avatar" width="25px" class="rounded-2" />
+                    {{ getTeamName(player) }}
+                </td>
+                <td>{{ player.roster.settings.fpts }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<h5>League Duds</h5>
+<div class="bg-light p-2 rounded-2">
+    <table class="table">
+        <thead>
+            <th scope="col">Team</th>
+            <th scope="col">FPTS</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let player of leagueLeadersLo">
+                <td>
+                    <img [src]="player.metadata.avatar" width="25px" class="rounded-2" />
+                    {{ getTeamName(player) }}
+                </td>
+                <td>{{ player.roster.settings.fpts }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

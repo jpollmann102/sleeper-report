@@ -1,0 +1,48 @@
+<h5>Player Studs</h5>
+<div class="bg-light p-2 mb-3 rounded-2">
+    <app-loading-spinner *ngIf="loading; else playerLeadersHiContent"></app-loading-spinner>
+    <ng-template #playerLeadersHiContent>
+        <table class="table">
+            <thead>
+                <th scope="col">Player</th>
+                <th scope="col">FPTS</th>
+            </thead>
+            <tbody>
+                <tr *ngIf="playerLeadersHi.length === 0">
+                    <td colspan="2" class="text-center">Season has not started</td>
+                </tr>
+                <tr *ngFor="let player of playerLeadersHi">
+                    <td>
+                        <img [src]="player.imgLink" width="25px" class="rounded-2" />
+                        {{ player.player.first_name }} {{ player.player.last_name }}
+                    </td>
+                    <td>{{ player.roster.settings.fpts }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </ng-template>
+</div>
+<h5>Player Duds</h5>
+<div class="bg-light p-2 rounded-2">
+    <app-loading-spinner *ngIf="loading; else playerLeadersLoContent"></app-loading-spinner>
+    <ng-template #playerLeadersLoContent>
+        <table class="table">
+            <thead>
+                <th scope="col">Player</th>
+                <th scope="col">FPTS</th>
+            </thead>
+            <tbody>
+                <tr *ngIf="playerLeadersLo.length === 0">
+                    <td colspan="2" class="text-center">Season has not started</td>
+                </tr>
+                <tr *ngFor="let player of playerLeadersLo">
+                    <td>
+                        <img [src]="player.imgLink" width="25px" class="rounded-2" />
+                        {{ player.player.first_name }} {{ player.player.last_name }}
+                    </td>
+                    <td>{{ player.roster.settings.fpts }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </ng-template>
+</div>

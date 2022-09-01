@@ -5,7 +5,7 @@
         <div class="d-flex">
             <div 
                 *ngFor="let league of leagues; let i=index;" 
-                class="rounded-2 p-3 league-row"
+                class="rounded-2 p-2 league-row"
                 (click)="leagueSelected.emit(league)"
                 [ngClass]="{ 
                     'bg-light': i % 2 === 0,

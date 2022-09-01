@@ -71,6 +71,7 @@ export class LeagueOverviewComponent implements OnChanges {
     });
 
     this.leagueUsers = finalLeagueUsers;
+    console.log(this.leagueUsers);
   }
 
 }

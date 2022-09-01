@@ -1,8 +1,10 @@
 <div *ngIf="player" class="border rounded-2 p-2" [ngClass]="getPositionBorderStyle(player.position)">
-    <span class="badge" [ngClass]="getPositionStyle(player.position)">{{ player.position }}</span>
     <div class="d-flex flex-row">
         <img [src]="player.imgLink" width="76px" height="50px" class="rounded">
-        <div class="fs-6">{{ player.full_name }}</div>
+        <div class="flex-column">
+            <div class="fs-6">{{ player.full_name }}</div>
+            <span class="badge" [ngClass]="getPositionStyle(player.position)">{{ player.position }}</span>
+        </div>
     </div>
 </div>
 <div *ngIf="draftPick" class="border border-secondary rounded-2 p-2">

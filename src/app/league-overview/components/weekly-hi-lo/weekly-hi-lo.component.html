@@ -1,0 +1,18 @@
+<h5>Weekly Hi/Lo Scores</h5>
+<app-loading-spinner *ngIf="loading; else hiLoContent"></app-loading-spinner>
+<ng-template #hiLoContent>
+    <div class="bg-light p-2 rounded-2">
+        <div class="row" *ngFor="let week of hiLo">
+            <div class="col-12">
+                <p>Week {{ week.week }}</p>
+            </div>
+            <div class="col-6">
+                <p *ngFor="let hi of week.hi">{{ getTeamName(hi.leagueUser) }} - {{ hi.fpts }} pts</p>
+            </div>
+            <div class="col-6">
+                <p *ngFor="let lo of week.lo">{{ getTeamName(lo.leagueUser) }} - {{ lo.fpts }} pts</p>
+            </div>
+        </div>
+        <p *ngIf="hiLo.length === 0">No scores yet</p>
+    </div>
+</ng-template>

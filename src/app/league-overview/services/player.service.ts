@@ -25,15 +25,17 @@ export class PlayerService implements OnDestroy {
   }
 
   private saveCacheMap() {
-    localStorage.setItem(
-      this.token, 
-      JSON.stringify({
-        cacheMap: Array.from(this.cacheMap),
-        cacheTime: this.cacheTime ? this.cacheTime : new Date().toLocaleString('en-US', {
-          timeZone: 'America/New_York'
-        }),
-      })
-    );
+    if(this.cacheMap.entries.length > 0) {
+      localStorage.setItem(
+        this.token, 
+        JSON.stringify({
+          cacheMap: Array.from(this.cacheMap),
+          cacheTime: this.cacheTime ? this.cacheTime : new Date().toLocaleString('en-US', {
+            timeZone: 'America/New_York'
+          }),
+        })
+      );
+    }
   }
 
   async getPlayers(playerIds:Array<number>) {
@@ -63,7 +65,7 @@ export class PlayerService implements OnDestroy {
     ]);
   }
 
-  private getPlayerImg(playerId:string) {
+  public getPlayerImg(playerId:string) {
     return `https://sleepercdn.com/content/nfl/players/${playerId}.jpg`;
   }
 
@@ -75,6 +77,10 @@ export class PlayerService implements OnDestroy {
     });
     stringRoster += ']';
     return stringRoster;
+  }
+
+  public getPlayerStats(year:number | string) {
+    return this.http.get(`https://api.sleeper.com/stats/nfl/${year}?season_type=regular&position[]=QB&position[]=RB&position[]=TE&position[]=WR&order_by=pts_dynasty_ppr`);
   }
 
   public getPlayerStatsAndProjections(week:number, roster:Array<string>) {

@@ -24,6 +24,10 @@ import { TxPlayerComponent } from './components/tx-player/tx-player.component';
 import { LeagueOtbComponent } from './components/league-otb/league-otb.component';
 import { UserTradeBlockComponent } from './components/user-trade-block/user-trade-block.component';
 import { TradeBlockPlayerComponent } from './components/trade-block-player/trade-block-player.component';
+import { LeagueStatsComponent } from './components/league-stats/league-stats.component';
+import { PlayerLeadersComponent } from './components/player-leaders/player-leaders.component';
+import { LeagueLeadersComponent } from './components/league-leaders/league-leaders.component';
+import { WeeklyHiLoComponent } from './components/weekly-hi-lo/weekly-hi-lo.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +50,10 @@ import { TradeBlockPlayerComponent } from './components/trade-block-player/trade
     LeagueOtbComponent,
     UserTradeBlockComponent,
     TradeBlockPlayerComponent,
+    LeagueStatsComponent,
+    PlayerLeadersComponent,
+    LeagueLeadersComponent,
+    WeeklyHiLoComponent,
   ],
   imports: [
     CommonModule,

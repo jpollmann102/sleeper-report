@@ -1,5 +1,8 @@
 <div *ngIf="leagueUser">
-    <h5>{{ getUserName() }}</h5>
+    <h5>
+        <img [src]="getPicture()" width="50px" class="rounded-2">
+        {{ getUserName() }}
+    </h5>
     <div class="row mb-3 gy-2">
         <div *ngFor="let player of userBlock" class="col-12 col-lg-6">
             <app-trade-block-player 

@@ -7,11 +7,15 @@
         <h4 class="mb-3">{{ selectedLeague!.name }}</h4>
         <div class="row">
             <div class="col-12 col-xl-8">
+                <app-league-stats [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-league-stats>
                 <app-league-matchups [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-league-matchups>
             </div>
             <div class="col-12 col-xl-4">
                 <div class="mb-5">
                     <app-power-ranking [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-power-ranking>
+                </div>
+                <div class="mb-5">
+                    <app-weekly-hi-lo [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-weekly-hi-lo>
                 </div>
                 <div class="mb-5">
                     <app-league-divisions [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-league-divisions>
