@@ -1,5 +1,8 @@
 <div *ngIf="tx" class="bg-light p-2 rounded-2">
-    <h5 class="mb-1">{{ leagueService.getTeamName(tx.creatorUser) }}</h5>
+    <h5 class="mb-1">
+        <img [src]="getPicture(tx.creatorUser)" width="50px" class="rounded-2">
+        {{ leagueService.getTeamName(tx.creatorUser) }}
+    </h5>
     <small>{{ tx.status_updated | date:'short' }}</small>
     <ng-container [ngSwitch]="tx.type">
         <app-tx-fa *ngSwitchCase="'free_agent'" [tx]="tx"></app-tx-fa>
