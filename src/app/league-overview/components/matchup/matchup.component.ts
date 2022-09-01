@@ -36,6 +36,15 @@ export class MatchupComponent implements OnChanges {
     }
   }
 
+  getProjectionClass(val1:number | undefined, val2:number | undefined) {
+    if(this.isGreater(val1, val2)) return 'text-primary';
+    return 'text-muted';
+  }
+
+  isGreater(val1:number | undefined, val2:number | undefined) {
+    return (val1 ? val1 : 0) > (val2 ? val2 : 0);
+  }
+
   async setupMatchup(matchup:LeagueMatchup | null) {
     if(matchup === null) {
       this.playerMatchups = [];

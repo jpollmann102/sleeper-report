@@ -28,10 +28,10 @@
                             {{ playerMatchup.playerOne?.full_name }}&nbsp;&nbsp;<span [ngClass]="getInjuryStatusStyle(playerMatchup.playerOne?.injury_status)">{{ getInjuryStatusText(playerMatchup.playerOne?.injury_status) }}</span>
                         </div>
                     </td>
-                    <td class="text-muted">{{ getPlayerProjection(matchup?.teamOneStarterProjections, i) | number:'1.1' }}</td>
+                    <td [ngClass]="getProjectionClass(getPlayerProjection(matchup?.teamOneStarterProjections, i), getPlayerProjection(matchup?.teamTwoStarterProjections, i))">{{ getPlayerProjection(matchup?.teamOneStarterProjections, i) | number:'1.1' }}</td>
                     <td>{{ getPlayerPoints(matchup?.teamOneStartersPoints, i) | number:'1.1' }}</td>
                     <td>{{ getPlayerPoints(matchup?.teamTwoStartersPoints, i) | number:'1.1' }}</td>
-                    <td class="text-muted">{{ getPlayerProjection(matchup?.teamTwoStarterProjections, i) | number:'1.1' }}</td>
+                    <td [ngClass]="getProjectionClass(getPlayerProjection(matchup?.teamTwoStarterProjections, i), getPlayerProjection(matchup?.teamOneStarterProjections, i))">{{ getPlayerProjection(matchup?.teamTwoStarterProjections, i) | number:'1.1' }}</td>
                     <td class="text-end">
                         <div class="fs-5">
                             <span [ngClass]="getInjuryStatusStyle(playerMatchup.playerTwo?.injury_status)">{{ getInjuryStatusText(playerMatchup.playerTwo?.injury_status) }}</span>&nbsp;&nbsp;{{ playerMatchup.playerTwo?.full_name }}
@@ -46,10 +46,10 @@
             <tfoot>
                 <tr>
                     <td></td>
-                    <td class="text-muted">{{ getProjectedPoints(matchup?.teamOneStarterProjections) | number:'1.1' }}</td>
+                    <td [ngClass]="getProjectionClass(getProjectedPoints(matchup?.teamOneStarterProjections), getProjectedPoints(matchup?.teamTwoStarterProjections))">{{ getProjectedPoints(matchup?.teamOneStarterProjections) | number:'1.1' }}</td>
                     <td><b>{{ matchup?.teamOnePoints | number:'1.1' }}</b></td>
                     <td><b>{{ matchup?.teamTwoPoints | number:'1.1' }}</b></td>
-                    <td class="text-muted">{{ getProjectedPoints(matchup?.teamTwoStarterProjections) | number:'1.1' }}</td>
+                    <td [ngClass]="getProjectionClass(getProjectedPoints(matchup?.teamTwoStarterProjections), getProjectedPoints(matchup?.teamOneStarterProjections))">{{ getProjectedPoints(matchup?.teamTwoStarterProjections) | number:'1.1' }}</td>
                     <td></td>
                 </tr>
             </tfoot>
