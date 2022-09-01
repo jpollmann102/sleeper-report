@@ -22,7 +22,10 @@ export class LeagueMatchupsComponent implements OnChanges {
   public weeks:Array<number> = [];
 
   constructor(public leagueService:LeagueService,
-              private playerService:PlayerService) { }
+              private playerService:PlayerService) {
+    this.leagueService.nflInfoLoaded
+      .subscribe(() => this.activeWeek = this.leagueService.getCurrentWeek())
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes) {
@@ -31,10 +34,16 @@ export class LeagueMatchupsComponent implements OnChanges {
           changes['league'].currentValue,
           changes['leagueUsers'].currentValue
         );
+        this.setupLeagueWeeks(
+          changes['league'].currentValue
+        );
       } else if(changes['league']) {
         this.getMatchups(
           changes['league'].currentValue,
           this.leagueUsers
+        );
+        this.setupLeagueWeeks(
+          changes['league'].currentValue
         );
       } else this.getMatchups(
         this.league,
