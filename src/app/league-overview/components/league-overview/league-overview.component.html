@@ -4,7 +4,7 @@
     </div>
     <app-loading-spinner *ngIf="loading; else leagueOverview"></app-loading-spinner>
     <ng-template #leagueOverview>
-        <h4 class="mb-3">{{ selectedLeague!.name }}</h4>
+        <h3 class="mb-3">{{ selectedLeague!.name }}</h3>
         <div class="row">
             <div class="col-12 col-xl-8">
                 <app-league-stats [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-league-stats>

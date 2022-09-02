@@ -10,14 +10,12 @@ import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/compat/fun
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/compat/firestore';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { UserHeaderComponent } from './components/user-header/user-header.component';
 import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    UserHeaderComponent,
   ],
   imports: [
     BrowserModule,

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { catchError, of, take } from 'rxjs';
 import { League } from 'src/app/interfaces/league';
 import { AuthService } from 'src/app/services/auth.service';
+import { AvatarService } from 'src/app/services/avatar.service';
 import { LeagueService } from '../../services/league.service';
 
 @Component({
@@ -16,7 +17,8 @@ export class LeaguesSidepanelComponent implements OnInit {
   public loading = false;
   public error = '';
 
-  constructor(private authService:AuthService,
+  constructor(public authService:AuthService,
+              private avatarService:AvatarService,
               private leagueService:LeagueService) {
     this.leagueService.nflInfoLoaded
       .pipe(
@@ -27,6 +29,10 @@ export class LeaguesSidepanelComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.leagueService.nflInfo) this.getLeagues();
+  }
+
+  getUserAvatar() {
+    return this.avatarService.getAvatar(this.authService.authUser ? this.authService.authUser.avatar : null);
   }
 
   getLeagues() {

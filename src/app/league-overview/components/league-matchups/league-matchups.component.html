@@ -1,5 +1,5 @@
 <div class="row gy-3">
-    <div class="col-12">
+    <div class="col-12 col-md-6">
         <select class="form-control w-100" style="width: 25%" [(ngModel)]="activeWeek" (ngModelChange)="getMatchups(league, leagueUsers)">
             <option *ngFor="let i of weeks" [value]="i">Week {{ i }}</option>
         </select>

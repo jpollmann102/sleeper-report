@@ -1,22 +1,31 @@
-<div class="border rounded-2 px-4 py-2">
-    <app-loading-spinner *ngIf="loading; else leagueSidePanel"></app-loading-spinner>
-    <ng-template #leagueSidePanel>
-        <h4>My Leagues</h4>
-        <div class="d-flex">
-            <div 
-                *ngFor="let league of leagues; let i=index;" 
-                class="rounded-2 p-2 league-row"
-                (click)="leagueSelected.emit(league)"
-                [ngClass]="{ 
-                    'bg-light': i % 2 === 0,
-                    'border border-primary': selectedLeague === league
-                }"
-            >
-                <app-league-row [league]="league"></app-league-row>
+<div class="border rounded-2 px-2">
+    <div class="row">
+        <ng-container *ngIf="authService.isLoggedIn">
+            <div class="col-12 col-md-3">
+                <img [src]="getUserAvatar()" class="img-fluid me-3" width="100px">
+                <h2>{{ authService.authUser?.username }}</h2>
             </div>
-            <div *ngIf="leagues.length === 0" class="col-12">
-                <p>You have no leagues</p>
+        </ng-container>
+        <app-loading-spinner *ngIf="loading; else leagueSidePanel"></app-loading-spinner>
+        <ng-template #leagueSidePanel>
+            <div class="col-12 col-md-9">
+                <div class="row gy-2">
+                    <div 
+                        *ngFor="let league of leagues; let i=index;" 
+                        class="rounded-2 p-2 league-row col-12 col-md-4 mt-3"
+                        (click)="leagueSelected.emit(league)"
+                        [ngClass]="{ 
+                            'bg-light': i % 2 === 0,
+                            'border border-primary': selectedLeague === league
+                        }"
+                    >
+                        <app-league-row [league]="league"></app-league-row>
+                    </div>
+                    <div *ngIf="leagues.length === 0" class="col-12">
+                        <p>You have no leagues</p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </ng-template>
+        </ng-template>
+    </div>
 </div>

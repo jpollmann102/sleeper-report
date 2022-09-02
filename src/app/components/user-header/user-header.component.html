@@ -1,8 +1,0 @@
-<ng-container *ngIf="authService.isLoggedIn">
-    <div class="border rounded-3">
-        <div class="d-flex align-items-center">
-            <img [src]="getUserAvatar()" class="img-fluid me-3" width="100px">
-            <h2>{{ authService.authUser?.username }}</h2>
-        </div>
-    </div>
-</ng-container>
