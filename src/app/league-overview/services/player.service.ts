@@ -12,7 +12,7 @@ import { isBefore, isAfter } from 'date-fns';
 export class PlayerService implements OnDestroy {
   private token = 'sleeper-report-players';
   private cacheMap = new Map<number, Player>();
-  private cacheTime = '';
+  private cacheTime:Date | null = null;
 
   constructor(private fns:AngularFireFunctions,
               private http:HttpClient) {                
@@ -25,14 +25,12 @@ export class PlayerService implements OnDestroy {
   }
 
   private saveCacheMap() {
-    if(this.cacheMap.entries.length > 0) {
+    if(this.cacheMap.size > 0) {
       localStorage.setItem(
         this.token, 
         JSON.stringify({
           cacheMap: Array.from(this.cacheMap),
-          cacheTime: this.cacheTime ? this.cacheTime : new Date().toLocaleString('en-US', {
-            timeZone: 'America/New_York'
-          }),
+          cacheTime: this.cacheTime ? this.cacheTime : Date.now(),
         })
       );
     }
@@ -120,22 +118,17 @@ export class PlayerService implements OnDestroy {
     const fromStorage = localStorage.getItem(this.token);
     if(fromStorage) {
       const parsed = JSON.parse(fromStorage);
-      const now = new Date(
-        new Date().toLocaleString('en-US', {
-          timeZone: 'America/New_York'
-        })
-      );
+      const now = new Date();
       const cachedTime = new Date(parsed.cacheTime);
-      const todayRun = new Date(now.setHours(1, 30));
+      const todayRun = new Date(now);
+      todayRun.setHours(1, 30);
       
       // if right now is not after today's run
       // or the cached time was not before today's run
       // then set the cache
       if(!isAfter(now, todayRun) || !isBefore(cachedTime, todayRun)) {
         this.cacheMap = new Map(parsed.cacheMap);
-        this.cacheTime = cachedTime.toLocaleDateString('en-US', {
-          timeZone: 'America/New_York'
-        });
+        this.cacheTime = new Date(parsed.cacheTime);
       }
     }
 
