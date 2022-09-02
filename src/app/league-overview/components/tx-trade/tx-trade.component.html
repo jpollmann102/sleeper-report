@@ -1,1 +1,12 @@
-<p>tx-trade works!</p>
+<ng-container *ngIf="tx">
+    <div class="mb-2">
+        <p><b>Trade</b></p>
+    </div>
+    <app-tx-trade-user-haul
+        *ngFor="let user of tx.tradeUsers"
+        [leagueUser]="user"
+        [adds]="tx.adds"
+        [players]="tx.playerAdds"
+        [draftPicks]="tx.draft_picks"
+    ></app-tx-trade-user-haul>
+</ng-container>

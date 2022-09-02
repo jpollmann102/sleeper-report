@@ -4,7 +4,7 @@
     <div class="bg-light p-2 rounded-2">
         <div class="row" *ngFor="let week of hiLo">
             <div class="col-12">
-                <p>Week {{ week.week }}</p>
+                <p><b>Week {{ week.week }}</b></p>
             </div>
             <div class="col-6">
                 <p *ngFor="let hi of week.hi">{{ getTeamName(hi.leagueUser) }} - {{ hi.fpts }} pts</p>

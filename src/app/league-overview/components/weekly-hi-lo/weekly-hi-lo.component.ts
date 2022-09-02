@@ -62,7 +62,6 @@ export class WeeklyHiLoComponent implements OnChanges {
         })
       )
       .subscribe((matchups) => {
-        console.log('matchups', matchups);
         let hiLo:Array<{ week:number, hi:Array<{ leagueUser:LeagueUser | undefined, fpts:number | undefined }>, lo:Array<{ leagueUser:LeagueUser | undefined, fpts:number | undefined }> }> = [];
         matchups.forEach((week, idx) => {
           const withLeagueUsers = week.map(m => {

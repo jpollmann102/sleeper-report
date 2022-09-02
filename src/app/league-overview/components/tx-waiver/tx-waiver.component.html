@@ -1,6 +1,6 @@
 <ng-container *ngIf="tx">
     <div class="mb-2">
-        <small>Waiver pickup</small>
+        <p><b>Waiver pickup</b></p>
     </div>
     <div *ngFor="let add of tx.playerAdds | keyvalue">
         <app-tx-player [player]="add.value" type="add"></app-tx-player>

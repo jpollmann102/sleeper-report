@@ -79,9 +79,8 @@ export class LeagueOtbComponent implements OnChanges {
       if(isDraftPick) {
         const year = splitPlayerId[1];
         const round = splitPlayerId[2];
-        const pick = splitPlayerId[0];
 
-        draftPick = `${year} round ${round} pick ${pick}`;
+        draftPick = `${year} round ${round}`;
       } else {
         const playerMatch = players.find(p => p && p.player_id === playerId);
         player = playerMatch ? playerMatch : null;

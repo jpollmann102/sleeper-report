@@ -28,6 +28,7 @@ import { LeagueStatsComponent } from './components/league-stats/league-stats.com
 import { PlayerLeadersComponent } from './components/player-leaders/player-leaders.component';
 import { LeagueLeadersComponent } from './components/league-leaders/league-leaders.component';
 import { WeeklyHiLoComponent } from './components/weekly-hi-lo/weekly-hi-lo.component';
+import { TxTradeUserHaulComponent } from './components/tx-trade-user-haul/tx-trade-user-haul.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { WeeklyHiLoComponent } from './components/weekly-hi-lo/weekly-hi-lo.comp
     PlayerLeadersComponent,
     LeagueLeadersComponent,
     WeeklyHiLoComponent,
+    TxTradeUserHaulComponent,
   ],
   imports: [
     CommonModule,

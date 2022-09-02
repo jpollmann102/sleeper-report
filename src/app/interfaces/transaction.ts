@@ -16,6 +16,7 @@ export interface Transaction {
     draft_picks:Array<DraftPick>,
     creator:string,  // user id who initiated the transaction
     creatorUser:LeagueUser | undefined,
+    tradeUsers:Array<LeagueUser | undefined> | null,
     created:number,
     consenter_ids:Array<number>, // roster_ids of the people who agreed to this transaction
     adds:{ [key:number]:number } | null,

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Transaction } from 'src/app/interfaces/transaction';
 
 @Component({
@@ -6,12 +6,9 @@ import { Transaction } from 'src/app/interfaces/transaction';
   templateUrl: './tx-trade.component.html',
   styleUrls: ['./tx-trade.component.scss']
 })
-export class TxTradeComponent implements OnInit {
+export class TxTradeComponent {
   @Input() tx:Transaction | null = null;
   
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }

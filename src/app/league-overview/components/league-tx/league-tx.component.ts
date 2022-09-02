@@ -119,20 +119,22 @@ export class LeagueTxComponent implements OnChanges, OnDestroy, OnInit {
       const asDate = new Date(tx.created);
       const now = new Date();
       return differenceInDays(now, asDate) < 15;
-    })
+    });
     allTx = allTx.sort((a,b) => b.created - a.created);
     let finalTx:Array<Transaction> = [];
     for(let i = 0; i < allTx.length; i++) {
       const tx = allTx[i];
       const playerAdds = await this.convertPlayerDict(tx.adds);
       const playerDrops = await this.convertPlayerDict(tx.drops);
+      const creatorUser = leagueUsers.find(lu => lu.user_id === tx.creator);
       finalTx = [
         ...finalTx,
         {
           ...tx,
           playerAdds,
           playerDrops, 
-          creatorUser: leagueUsers.find(lu => lu.user_id === tx.creator),
+          creatorUser: creatorUser,
+          tradeUsers: tx.type === 'trade' ? this.getTradeUsers(tx, leagueUsers) : null,
           leagueUserAdds: this.convertLeagueUserDict(tx.adds, leagueUsers),
           leagueUserDrops: this.convertLeagueUserDict(tx.drops, leagueUsers),
         },
@@ -140,6 +142,10 @@ export class LeagueTxComponent implements OnChanges, OnDestroy, OnInit {
     }
 
     return new Promise((resolve, reject) => resolve(finalTx));
+  }
+
+  getTradeUsers(tx:Transaction, leagueUsers:Array<LeagueUser>) {
+    return tx.roster_ids.map(id => leagueUsers.find(lu => lu.roster.roster_id === id));
   }
 
   async convertPlayerDict(dict:{ [key:number]:number } | null):Promise<{ [key:number]:Player | null } | null> {
