@@ -3,6 +3,7 @@ import { Game } from 'src/app/interfaces/game';
 import { LeagueMatchup } from 'src/app/interfaces/league-matchup';
 import { LeagueUser } from 'src/app/interfaces/league-user';
 import { Player } from 'src/app/interfaces/player';
+import { LeagueService } from '../../services/league.service';
 import { PlayerService } from '../../services/player.service';
 
 enum Injury {
@@ -28,7 +29,8 @@ export class MatchupComponent implements OnChanges {
   @Input() loading = false;
   public playerMatchups:Array<PlayerMatchup> = [];
 
-  constructor(private playerService:PlayerService) {}
+  constructor(private playerService:PlayerService,
+              private leagueService:LeagueService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes && changes['matchup']) {
@@ -80,6 +82,11 @@ export class MatchupComponent implements OnChanges {
   getPlayerImg(player:Player | undefined | null) {
     if(player) return player.imgLink;
     return 'assets/football-helmet.png';
+  }
+
+  getPlayerTeamImg(player:Player | undefined | null) {
+    if(player) return this.leagueService.getTeamLogo(player.team);
+    else return 'assets/football-helmet.png';
   }
 
   getPlayerPoints(starterPoints:Array<number> | undefined, idx:number):number {

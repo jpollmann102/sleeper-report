@@ -13,8 +13,16 @@
                 </tr>
                 <tr *ngFor="let player of playerLeadersHi">
                     <td>
-                        <img [src]="player.imgLink" width="50px" class="rounded-2" />
-                        {{ player.player.first_name }} {{ player.player.last_name }}
+                        <div class="d-flex">
+                            <img [src]="player.imgLink" width="75px" height="50px" class="rounded-2" />
+                            <div class="flex-column">
+                                <div>{{ player.player.first_name }} {{ player.player.last_name }}</div>
+                                <div class="flex-row">
+                                    <img [src]="player.teamImgLink" width="25px" class="rounded-2 me-2" />
+                                    <span class="badge" [ngClass]="getPositionStyle(player.player.position)">{{ player.player.position }}</span>    
+                                </div>
+                            </div>
+                        </div>
                     </td>
                     <td>{{ player.stats.pts_ppr }}</td>
                 </tr>
@@ -37,8 +45,16 @@
                 </tr>
                 <tr *ngFor="let player of playerLeadersLo">
                     <td>
-                        <img [src]="player.imgLink" width="50px" class="rounded-2" />
-                        {{ player.player.first_name }} {{ player.player.last_name }}
+                        <div class="d-flex">
+                            <img [src]="player.imgLink" width="75px" height="50px" class="rounded-2 me-2" />
+                            <div class="flex-column">
+                                <div>{{ player.player.first_name }} {{ player.player.last_name }}</div>
+                                <div class="flex-row">
+                                    <img class="me-2" [src]="player.teamImgLink" width="25px" class="rounded-2 me-2" />
+                                    <span class="badge" [ngClass]="getPositionStyle(player.player.position)">{{ player.player.position }}</span>    
+                                </div>
+                            </div>
+                        </div>
                     </td>
                     <td>{{ player.stats.pts_ppr }}</td>
                 </tr>

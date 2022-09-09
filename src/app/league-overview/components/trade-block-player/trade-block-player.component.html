@@ -1,9 +1,12 @@
 <div *ngIf="player" class="border rounded-2 p-2" [ngClass]="getPositionBorderStyle(player.position)">
-    <div class="d-flex flex-row">
-        <img [src]="player.imgLink" width="76px" height="50px" class="rounded">
+    <div class="d-flex">
+        <img [src]="player.imgLink" width="75px" height="50px" class="rounded-2 me-2" />
         <div class="flex-column">
-            <div class="fs-6">{{ player.full_name }}</div>
-            <span class="badge" [ngClass]="getPositionStyle(player.position)">{{ player.position }}</span>
+            <div>{{ player.first_name }} {{ player.last_name }}</div>
+            <div class="flex-row">
+                <img class="me-2" [src]="player.teamImgLink" width="25px" class="rounded-2 me-2" />
+                <span class="badge" [ngClass]="getPositionStyle(player.position)">{{ player.position }}</span>    
+            </div>
         </div>
     </div>
 </div>

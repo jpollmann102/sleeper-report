@@ -83,7 +83,10 @@ export class LeagueOtbComponent implements OnChanges {
         draftPick = `${year} round ${round}`;
       } else {
         const playerMatch = players.find(p => p && p.player_id === playerId);
-        player = playerMatch ? playerMatch : null;
+        player = playerMatch ? {
+          ...playerMatch,
+          teamImgLink: this.leagueService.getTeamLogo(playerMatch.team),
+        } : null;
       }
 
       leagueUser = leagueUsers.find(lu => lu.roster.roster_id === p.settings.otb);

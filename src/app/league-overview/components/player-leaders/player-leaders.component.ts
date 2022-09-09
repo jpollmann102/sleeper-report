@@ -52,17 +52,27 @@ export class PlayerLeadersComponent implements OnChanges {
       .subscribe((value:any) => {
         const matchedPlayers = value.filter((p:any) => leaguePlayers.some(lp => lp?.player_id === p.player_id));
         const playersWithScores = matchedPlayers.filter((p:any) => p.stats.pts_ppr !== undefined);
-        const withPlayerImgs = playersWithScores.map((p:any) => {
+        const withImgs = playersWithScores.map((p:any) => {
           return {
             ...p,
-            imgLink: this.playerService.getPlayerImg(p.player_id)
+            imgLink: this.playerService.getPlayerImg(p.player_id),
+            teamImgLink: this.leagueService.getTeamLogo(p.team),
           };
         });
-        this.playerLeadersLo = this.findLowestScores(withPlayerImgs);
-        this.playerLeadersHi = this.findHighestScores(withPlayerImgs);
+        this.playerLeadersLo = this.findLowestScores(withImgs);
+        this.playerLeadersHi = this.findHighestScores(withImgs);
 
         this.loading = false;
       });
+  }
+
+  getPositionStyle(position:string | undefined) {
+    if(position === 'QB') return 'bg-danger text-white';
+    if(position === 'RB') return 'bg-warning';
+    if(position === 'WR') return 'bg-primary text-white';
+    if(position === 'TE') return 'bg-success text-white';
+    if(position === 'K') return 'bg-light';
+    return '';
   }
 
   findLowestScores(players:Array<any>):Array<any> {
