@@ -13,10 +13,10 @@
                 </tr>
                 <tr *ngFor="let player of playerLeadersHi">
                     <td>
-                        <img [src]="player.imgLink" width="25px" class="rounded-2" />
+                        <img [src]="player.imgLink" width="50px" class="rounded-2" />
                         {{ player.player.first_name }} {{ player.player.last_name }}
                     </td>
-                    <td>{{ player.roster.settings.fpts }}</td>
+                    <td>{{ player.stats.pts_ppr }}</td>
                 </tr>
             </tbody>
         </table>
@@ -37,10 +37,10 @@
                 </tr>
                 <tr *ngFor="let player of playerLeadersLo">
                     <td>
-                        <img [src]="player.imgLink" width="25px" class="rounded-2" />
+                        <img [src]="player.imgLink" width="50px" class="rounded-2" />
                         {{ player.player.first_name }} {{ player.player.last_name }}
                     </td>
-                    <td>{{ player.roster.settings.fpts }}</td>
+                    <td>{{ player.stats.pts_ppr }}</td>
                 </tr>
             </tbody>
         </table>

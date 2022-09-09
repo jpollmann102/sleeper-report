@@ -8,6 +8,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "deploy": "firebase deploy --only hosting",
+    "deploy:backup": "ng deploy",
     "test": "ng test"
   },
   "private": true,

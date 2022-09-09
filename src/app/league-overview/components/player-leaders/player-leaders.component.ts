@@ -52,22 +52,14 @@ export class PlayerLeadersComponent implements OnChanges {
       .subscribe((value:any) => {
         const matchedPlayers = value.filter((p:any) => leaguePlayers.some(lp => lp?.player_id === p.player_id));
         const playersWithScores = matchedPlayers.filter((p:any) => p.stats.pts_ppr !== undefined);
-        this.playerLeadersLo = this.findLowestScores(
-          playersWithScores.map((p:any) => {
-            return {
-              ...p,
-              imgLink: this.playerService.getPlayerImg(p.player_id)
-            };
-          })
-        );
-        this.playerLeadersHi = this.findHighestScores(
-          playersWithScores.map((p:any) => {
-            return {
-              ...p,
-              imgLink: this.playerService.getPlayerImg(p.player_id)
-            };
-          })
-        );
+        const withPlayerImgs = playersWithScores.map((p:any) => {
+          return {
+            ...p,
+            imgLink: this.playerService.getPlayerImg(p.player_id)
+          };
+        });
+        this.playerLeadersLo = this.findLowestScores(withPlayerImgs);
+        this.playerLeadersHi = this.findHighestScores(withPlayerImgs);
 
         this.loading = false;
       });
@@ -84,7 +76,7 @@ export class PlayerLeadersComponent implements OnChanges {
 
   findHighestScores(players:Array<any>):Array<any> {
     return players.sort((a,b) => {
-      if(a.stats.pts_ppr && b.stats.pts_ppr) return a.stats.pts_ppr - a.stats.pts_ppr;
+      if(a.stats.pts_ppr && b.stats.pts_ppr) return b.stats.pts_ppr - a.stats.pts_ppr;
       if(a.stats.pts_ppr) return -1;
       if(b.stats.pts_ppr) return 1;
       return 0;
