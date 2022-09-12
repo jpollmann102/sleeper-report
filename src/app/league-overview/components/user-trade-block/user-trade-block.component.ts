@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { LeagueUser } from 'src/app/interfaces/league-user';
 import { OtbPlayer } from 'src/app/interfaces/otb-player';
+import { AvatarService } from 'src/app/services/avatar.service';
 
 @Component({
   selector: 'app-user-trade-block',
@@ -11,7 +12,7 @@ export class UserTradeBlockComponent implements OnChanges {
   @Input() userBlock:Array<OtbPlayer> = [];
   public leagueUser:LeagueUser | null = null;
 
-  constructor() { }
+  constructor(private avatarService:AvatarService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes && changes['userBlock']) {
@@ -20,8 +21,7 @@ export class UserTradeBlockComponent implements OnChanges {
   }
 
   getPicture() {
-    if(this.leagueUser?.metadata.avatar) return this.leagueUser.metadata.avatar;
-    else return 'assets/football-helmet.png';
+    return this.avatarService.getTeamImg(this.leagueUser);
   }
 
   setupUserBlock(userBlock:Array<OtbPlayer>) {
