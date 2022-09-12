@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { catchError, forkJoin, Observable, of, take } from 'rxjs';
 import { Game } from 'src/app/interfaces/game';
 import { League } from 'src/app/interfaces/league';
@@ -12,7 +12,7 @@ import { PlayerService } from '../../services/player.service';
   templateUrl: './league-matchups.component.html',
   styleUrls: ['./league-matchups.component.scss']
 })
-export class LeagueMatchupsComponent implements OnChanges {
+export class LeagueMatchupsComponent implements OnChanges, OnDestroy {
   @Input() league:League | null = null;
   @Input() leagueUsers:Array<LeagueUser> = [];
   public matchups:Array<LeagueMatchup> = [];
@@ -20,6 +20,9 @@ export class LeagueMatchupsComponent implements OnChanges {
   public error = '';
   public activeWeek = this.leagueService.getCurrentWeek();
   public weeks:Array<number> = [];
+  public selectedMatchup:LeagueMatchup | null = null;
+  private matchupIdx = 0;
+  private interval:any = null;
 
   constructor(public leagueService:LeagueService,
               private playerService:PlayerService) {
@@ -50,6 +53,11 @@ export class LeagueMatchupsComponent implements OnChanges {
         changes['leagueUsers'].currentValue
       );
     }
+  }
+
+  ngOnDestroy(): void {
+    if(this.interval) clearInterval(this.interval);
+    this.interval = null;
   }
 
   setupLeagueWeeks(league:League | null) {
@@ -195,6 +203,13 @@ export class LeagueMatchupsComponent implements OnChanges {
         });
 
         this.matchups = matchups;
+        if(matchups.length > 0) {
+          this.selectedMatchup = matchups[this.matchupIdx];
+          this.interval = setInterval(() => {
+            this.matchupIdx += 1;
+            this.selectedMatchup = this.matchups[this.matchupIdx % this.matchups.length];
+          }, 15000);
+        }
         this.loading = false;
       });
   }

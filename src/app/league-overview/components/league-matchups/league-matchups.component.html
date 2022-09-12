@@ -11,7 +11,17 @@
 <hr>
 <app-loading-spinner *ngIf="loading; else matchupsContent"></app-loading-spinner>
 <ng-template #matchupsContent>
-    <div class="mb-3" *ngFor="let matchup of matchups">
-        <app-matchup [matchup]="matchup" [loading]="loading"></app-matchup>
+    <div class="d-flex justify-content-center mb-3">
+        <ng-container *ngFor="let matchup of matchups">
+            <div class="hover me-3" (click)="selectedMatchup = matchup">
+                <i *ngIf="matchup === selectedMatchup; else unselectedIcon" class="bi bi-circle-fill"></i>
+                <ng-template #unselectedIcon>
+                    <i class="bi bi-circle"></i>
+                </ng-template>
+            </div>
+        </ng-container>
+    </div>
+    <div class="mb-3">
+        <app-matchup [matchup]="selectedMatchup" [loading]="loading"></app-matchup>
     </div>
 </ng-template>

@@ -1,6 +1,8 @@
-<h5>Divisions</h5>
-<div class="row gy-3">
-    <div *ngFor="let division of divisions" class="col-12">
-        <app-division [division]="division"></app-division>
+<div class="mb-3">
+    <h5>Divisions</h5>
+    <div class="row gy-3">
+        <div *ngFor="let division of divisions" class="col-12 col-lg-6">
+            <app-division [division]="division"></app-division>
+        </div>
     </div>
 </div>
