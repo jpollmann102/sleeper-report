@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { LeagueUser } from 'src/app/interfaces/league-user';
+import { AvatarService } from 'src/app/services/avatar.service';
 
 @Component({
   selector: 'app-division-user',
@@ -11,7 +12,7 @@ export class DivisionUserComponent implements OnChanges {
   public teamName = '';
   public teamImg = 'assets/football-helmet.png';
 
-  constructor() { }
+  constructor(private avatarService:AvatarService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes && changes['user']) {
@@ -27,9 +28,7 @@ export class DivisionUserComponent implements OnChanges {
   }
 
   getTeamImg(user:LeagueUser | null) {
-    if(user === null) this.teamImg = 'assets/football-helmet.png';
-    if(user!.metadata.avatar) this.teamImg = user!.metadata.avatar;
-    else this.teamImg = 'assets/football-helmet.png';
+    this.teamImg = this.avatarService.getTeamImg(user);
   }
 
 }

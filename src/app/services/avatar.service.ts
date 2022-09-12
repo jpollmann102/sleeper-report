@@ -13,8 +13,9 @@ export class AvatarService {
     else return 'assets/football-helmet.png';
   }
 
-  public getTeamImg(roster:LeagueUser) {
-    if(roster!.metadata.avatar) return roster!.metadata.avatar;
+  public getTeamImg(roster:LeagueUser | null) {
+    if(!roster) return 'assets/football-helmet.png';
+    if(roster!.metadata.avatar) return roster.metadata.avatar;
     else return this.getAvatar(roster.avatar);
   }
 
