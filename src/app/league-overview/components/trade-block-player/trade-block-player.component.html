@@ -5,7 +5,7 @@
             <div>{{ player.first_name }} {{ player.last_name }}</div>
             <div class="flex-row">
                 <img class="me-2" [src]="player.teamImgLink" width="25px" class="rounded-2 me-2" />
-                <span class="badge" [ngClass]="getPositionStyle(player.position)">{{ player.position }}</span>    
+                <span class="badge" [appPlayerPosition]="player.position">{{ player.position }}</span>    
             </div>
         </div>
     </div>

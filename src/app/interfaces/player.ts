@@ -1,3 +1,5 @@
+import { Game } from "./game";
+
 export interface Player {
     hashtag:string,
     depth_chart_position:number,
@@ -17,6 +19,7 @@ export interface Player {
     college:string,
     fantasy_data_id:number,
     injury_status:string | null,
+    injuryStatusText:string | null,
     player_id:string,
     height:string,
     search_full_name:string,
@@ -33,5 +36,9 @@ export interface Player {
     rotowire_id:string | null,
     rotoworld_id:string | null,
     search_first_name:string,
-    yahoo_id:string | null
-}
+    yahoo_id:string | null,
+    playerPoints:number | null,
+    playerProjection:Game | undefined,
+    playerStats:Game | undefined,
+    playerPerformance:number | undefined,
+};

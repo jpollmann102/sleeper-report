@@ -5,6 +5,8 @@ import { AngularFireFunctions } from '@angular/fire/compat/functions';
 import { Player } from 'src/app/interfaces/player';
 import { HttpClient } from '@angular/common/http';
 import { isBefore, isAfter } from 'date-fns';
+import { LeagueService } from './league.service';
+import { Injury } from 'src/app/interfaces/injury.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +17,7 @@ export class PlayerService implements OnDestroy {
   private cacheTime:Date | null = null;
 
   constructor(private fns:AngularFireFunctions,
+              private leagueService:LeagueService,
               private http:HttpClient) {                
     window.onbeforeunload = () => this.ngOnDestroy();
     this.setupPlayerMap();
@@ -65,6 +68,20 @@ export class PlayerService implements OnDestroy {
 
   public getPlayerImg(playerId:string) {
     return `https://sleepercdn.com/content/nfl/players/${playerId}.jpg`;
+  }
+
+  public getInjuryStatusText(injury:string | null | undefined) {
+    if(injury === Injury.QUESTIONABLE) return 'Q';
+    if(injury === Injury.DOUBTFUL) return 'D';
+    if(injury === Injury.IR) return 'IR';
+    if(injury === Injury.PUP) return 'PUP';
+    if(injury === Injury.OUT) return 'O';
+    return '';
+  }
+
+  public getPlayerTeamImg(player:Player | undefined | null) {
+    if(player) return this.leagueService.getTeamLogo(player.team);
+    else return 'assets/football-helmet.png';
   }
 
   private createStringRoster(roster:Array<string>):string {

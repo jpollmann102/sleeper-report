@@ -66,15 +66,6 @@ export class PlayerLeadersComponent implements OnChanges {
       });
   }
 
-  getPositionStyle(position:string | undefined) {
-    if(position === 'QB') return 'bg-danger text-white';
-    if(position === 'RB') return 'bg-warning';
-    if(position === 'WR') return 'bg-primary text-white';
-    if(position === 'TE') return 'bg-success text-white';
-    if(position === 'K') return 'bg-light';
-    return '';
-  }
-
   findLowestScores(players:Array<any>):Array<any> {
     return players.sort((a,b) => {
       if(a.stats.pts_ppr && b.stats.pts_ppr) return a.stats.pts_ppr - b.stats.pts_ppr;

@@ -12,15 +12,6 @@ export class TradeBlockPlayerComponent {
 
   constructor() { }
 
-  getPositionStyle(position:string | undefined) {
-    if(position === 'QB') return 'bg-danger text-white';
-    if(position === 'RB') return 'bg-warning';
-    if(position === 'WR') return 'bg-primary text-white';
-    if(position === 'TE') return 'bg-success text-white';
-    if(position === 'K') return 'bg-light';
-    return '';
-  }
-
   getPositionBorderStyle(position:string | undefined) {
     if(position === 'QB') return 'border-danger';
     if(position === 'RB') return 'border-warning';

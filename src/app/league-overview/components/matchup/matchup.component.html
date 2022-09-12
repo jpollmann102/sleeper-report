@@ -5,15 +5,17 @@
             <thead>
                 <tr>
                     <th scope="col">
-                        <img [src]="getTeamImg(matchup!.teamOne)" class="rounded-2" height="50px">
-                        {{ getTeamName(matchup!.teamOne) }}
+                        <img [src]="avatarService.getTeamImg(matchup!.teamOne)" class="rounded-2" height="50px">
+                        {{ leagueService.getTeamName(matchup!.teamOne) }}
                     </th>
+                    <th scope="col"></th>
                     <th scope="col"></th>
                     <th scope="col" colspan="2" class="text-center">Vs</th>
                     <th scope="col"></th>
+                    <th scope="col"></th>
                     <th scope="col" class="text-end">
-                        {{ getTeamName(matchup!.teamTwo) }}
-                        <img [src]="getTeamImg(matchup!.teamTwo)" class="rounded-2" height="50px">
+                        {{ leagueService.getTeamName(matchup!.teamTwo) }}
+                        <img [src]="avatarService.getTeamImg(matchup!.teamTwo)" class="rounded-2" height="50px">
                     </th>
                 </tr>
             </thead>
@@ -22,12 +24,17 @@
                     <td class="text-start">
                         <div class="fs-5">
                             <div class="d-flex">
-                                <img [src]="getPlayerImg(playerMatchup.playerOne)" width="75px" height="50px" class="rounded-2 me-2" />
+                                <img [src]="playerMatchup.playerOne!.imgLink" width="75px" height="50px" class="rounded-2 me-2" />
                                 <div class="flex-column">
-                                    <div>{{ playerMatchup.playerOne?.full_name }}&nbsp;&nbsp;<span [ngClass]="getInjuryStatusStyle(playerMatchup.playerOne?.injury_status)">{{ getInjuryStatusText(playerMatchup.playerOne?.injury_status) }}</span></div>
+                                    <div>
+                                        {{ playerMatchup.playerOne?.full_name }}&nbsp;&nbsp;
+                                        <span [appPlayerInjury]="playerMatchup.playerOne?.injury_status">
+                                            {{ playerMatchup.playerOne?.injuryStatusText }}
+                                        </span>
+                                    </div>
                                     <div class="flex-row">
-                                        <img class="me-2" [src]="getPlayerTeamImg(playerMatchup.playerOne)" width="25px" class="rounded-2 me-2" />
-                                        <span class="badge" [ngClass]="getPositionStyle(playerMatchup.playerOne?.position)">
+                                        <img class="me-2" [src]="playerMatchup.playerOne!.teamImgLink" width="25px" class="rounded-2 me-2" />
+                                        <span class="badge" [appPlayerPosition]="playerMatchup.playerOne?.position">
                                             {{ playerMatchup.playerOne?.position }}
                                         </span>
                                     </div>
@@ -35,24 +42,59 @@
                             </div>
                         </div>
                     </td>
-                    <td [ngClass]="getProjectionClass(getPlayerProjection(matchup?.teamOneStarterProjections, i), getPlayerProjection(matchup?.teamTwoStarterProjections, i))">{{ getPlayerProjection(matchup?.teamOneStarterProjections, i) | number:'1.1' }}</td>
-                    <td>{{ getPlayerPoints(matchup?.teamOneStartersPoints, i) | number:'1.1' }}</td>
-                    <td>{{ getPlayerPoints(matchup?.teamTwoStartersPoints, i) | number:'1.1' }}</td>
-                    <td [ngClass]="getProjectionClass(getPlayerProjection(matchup?.teamTwoStarterProjections, i), getPlayerProjection(matchup?.teamOneStarterProjections, i))">{{ getPlayerProjection(matchup?.teamTwoStarterProjections, i) | number:'1.1' }}</td>
+                    <td>
+                        <ng-container *ngIf="playerMatchup.playerOne?.playerPerformance !== undefined">
+                            x
+                            <span [appPlayerPerformance]="playerMatchup.playerOne?.playerPerformance">
+                                {{ playerMatchup.playerOne?.playerPerformance | number:'1.1-2' }}
+                            </span>
+                        </ng-container>
+                    </td>
+                    <td 
+                        [ngClass]="getProjectionClass(
+                            playerMatchup.playerOne?.playerProjection, 
+                            playerMatchup.playerTwo?.playerProjection
+                        )"
+                    >
+                        {{ playerMatchup.playerOne?.playerProjection?.stats?.pts_ppr | number:'1.1-2' }}
+                    </td>
+                    <td><b>{{ playerMatchup.playerOne?.playerPoints | number:'1.1-2' }}</b></td>
+                    <td><b>{{ playerMatchup.playerTwo?.playerPoints | number:'1.1-2' }}</b></td>
+                    <td 
+                        [ngClass]="getProjectionClass(
+                            playerMatchup.playerTwo?.playerProjection, 
+                            playerMatchup.playerOne?.playerProjection
+                        )"
+                    >
+                        {{ playerMatchup.playerTwo?.playerProjection?.stats?.pts_ppr | number:'1.1-2' }}
+                    </td>
+                    <td>
+                        <ng-container *ngIf="playerMatchup.playerTwo?.playerPerformance !== undefined">
+                            x
+                            <span [appPlayerPerformance]="playerMatchup.playerTwo?.playerPerformance">
+                                {{ playerMatchup.playerTwo?.playerPerformance | number:'1.1-2' }}
+                            </span>
+                        </ng-container>
+                    </td>
                     <td>
                         <div class="fs-5">
                             <div class="d-flex justify-content-end">
                                 <div class="d-flex flex-column">
-                                    <div><span [ngClass]="getInjuryStatusStyle(playerMatchup.playerTwo?.injury_status)">{{ getInjuryStatusText(playerMatchup.playerTwo?.injury_status) }}</span>&nbsp;&nbsp;{{ playerMatchup.playerTwo?.full_name }}</div>
+                                    <div>
+                                        <span [appPlayerInjury]="playerMatchup.playerTwo?.injury_status">
+                                            {{ playerMatchup.playerTwo?.injuryStatusText }}
+                                        </span>
+                                        &nbsp;&nbsp;{{ playerMatchup.playerTwo?.full_name }}
+                                    </div>
                                     <div class="d-flex flex-row justify-content-end">
-                                        <span class="badge me-2" [ngClass]="getPositionStyle(playerMatchup.playerTwo?.position)">
+                                        <span class="badge me-2" [appPlayerPosition]="playerMatchup.playerTwo?.position">
                                             {{ playerMatchup.playerTwo?.position }}
                                         </span>
-                                        <img [src]="getPlayerTeamImg(playerMatchup.playerTwo)" width="25px" class="rounded-2" />
+                                        <img [src]="playerMatchup.playerTwo!.teamImgLink" width="25px" class="rounded-2" />
                                     </div>
                                 </div>
                                 <div class="flex-column">
-                                    <img [src]="getPlayerImg(playerMatchup.playerTwo)" width="75px" height="50px" class="rounded-2" />
+                                    <img [src]="playerMatchup.playerTwo!.imgLink" width="75px" height="50px" class="rounded-2" />
                                 </div>
                             </div>
                         </div>
@@ -62,10 +104,26 @@
             <tfoot>
                 <tr>
                     <td></td>
-                    <td [ngClass]="getProjectionClass(getProjectedPoints(matchup?.teamOneStarterProjections), getProjectedPoints(matchup?.teamTwoStarterProjections))">{{ getProjectedPoints(matchup?.teamOneStarterProjections) | number:'1.1' }}</td>
+                    <td></td>
+                    <td 
+                        [ngClass]="getTeamProjectedPointsStyle(
+                            matchup?.teamOneStarterProjections, 
+                            matchup?.teamTwoStarterProjections
+                        )"
+                    >
+                        {{ matchupService.getProjectedPoints(matchup?.teamOneStarterProjections) | number:'1.1' }}
+                    </td>
                     <td><b>{{ matchup?.teamOnePoints | number:'1.1' }}</b></td>
                     <td><b>{{ matchup?.teamTwoPoints | number:'1.1' }}</b></td>
-                    <td [ngClass]="getProjectionClass(getProjectedPoints(matchup?.teamTwoStarterProjections), getProjectedPoints(matchup?.teamOneStarterProjections))">{{ getProjectedPoints(matchup?.teamTwoStarterProjections) | number:'1.1' }}</td>
+                    <td 
+                        [ngClass]="getTeamProjectedPointsStyle(
+                            matchup?.teamTwoStarterProjections, 
+                            matchup?.teamOneStarterProjections
+                        )"
+                    >
+                        {{ matchupService.getProjectedPoints(matchup?.teamTwoStarterProjections) | number:'1.1' }}
+                    </td>
+                    <td></td>
                     <td></td>
                 </tr>
             </tfoot>

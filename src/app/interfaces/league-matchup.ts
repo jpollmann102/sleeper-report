@@ -22,4 +22,4 @@ export interface LeagueMatchup {
     matchup_id:number,
     points?:number, // total points for team based on league settings
     custom_points?:number, // if commissioner overrides points manually
-}
+};

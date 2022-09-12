@@ -29,6 +29,9 @@ import { PlayerLeadersComponent } from './components/player-leaders/player-leade
 import { LeagueLeadersComponent } from './components/league-leaders/league-leaders.component';
 import { WeeklyHiLoComponent } from './components/weekly-hi-lo/weekly-hi-lo.component';
 import { TxTradeUserHaulComponent } from './components/tx-trade-user-haul/tx-trade-user-haul.component';
+import { PlayerPerformanceDirective } from './directives/player-performance.directive';
+import { PlayerInjuryDirective } from './directives/player-injury.directive';
+import { PlayerPositionDirective } from './directives/player-position.directive';
 
 @NgModule({
   declarations: [
@@ -56,6 +59,9 @@ import { TxTradeUserHaulComponent } from './components/tx-trade-user-haul/tx-tra
     LeagueLeadersComponent,
     WeeklyHiLoComponent,
     TxTradeUserHaulComponent,
+    PlayerPerformanceDirective,
+    PlayerInjuryDirective,
+    PlayerPositionDirective,
   ],
   imports: [
     CommonModule,

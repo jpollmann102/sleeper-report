@@ -21,7 +21,7 @@
                                         <div>{{ player.player.first_name }} {{ player.player.last_name }}</div>
                                         <div class="flex-row">
                                             <img [src]="player.teamImgLink" width="25px" class="rounded-2 me-2" />
-                                            <span class="badge" [ngClass]="getPositionStyle(player.player.position)">{{ player.player.position }}</span>    
+                                            <span class="badge" [appPlayerPosition]="player.player.position">{{ player.player.position }}</span>    
                                         </div>
                                     </div>
                                 </div>
@@ -55,7 +55,7 @@
                                         <div>{{ player.player.first_name }} {{ player.player.last_name }}</div>
                                         <div class="flex-row">
                                             <img class="me-2" [src]="player.teamImgLink" width="25px" class="rounded-2 me-2" />
-                                            <span class="badge" [ngClass]="getPositionStyle(player.player.position)">{{ player.player.position }}</span>    
+                                            <span class="badge" [appPlayerPosition]="player.player.position">{{ player.player.position }}</span>    
                                         </div>
                                     </div>
                                 </div>
