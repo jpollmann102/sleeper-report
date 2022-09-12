@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { LeagueRoster } from 'src/app/interfaces/league-roster';
 import { LeagueUser } from 'src/app/interfaces/league-user';
+import { AvatarService } from 'src/app/services/avatar.service';
 
 @Component({
   selector: 'app-league-leaders',
@@ -12,7 +13,7 @@ export class LeagueLeadersComponent implements OnChanges {
   public leagueLeadersLo:Array<LeagueUser> = [];
   public leagueLeadersHi:Array<LeagueUser> = [];
 
-  constructor() { }
+  constructor(private avatarService:AvatarService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes && changes['leagueUsers']) {
@@ -40,6 +41,10 @@ export class LeagueLeadersComponent implements OnChanges {
   getTeamName(leagueUser:LeagueUser) {
     if(leagueUser.metadata.team_name) return leagueUser.metadata.team_name;
     return leagueUser.display_name;
+  }
+
+  getPlayerImg(leagueUser:LeagueUser) {
+    return this.avatarService.getTeamImg(leagueUser);
   }
 
 }

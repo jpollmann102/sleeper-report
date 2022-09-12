@@ -10,7 +10,7 @@
                 <tbody>
                     <tr *ngFor="let player of leagueLeadersHi">
                         <td>
-                            <img [src]="player.metadata.avatar" width="50px" class="rounded-2" />
+                            <img [src]="getPlayerImg(player)" width="50px" class="rounded-2" />
                             {{ getTeamName(player) }}
                         </td>
                         <td>{{ player.roster.settings.fpts }}</td>
@@ -30,7 +30,7 @@
                 <tbody>
                     <tr *ngFor="let player of leagueLeadersLo">
                         <td>
-                            <img [src]="player.metadata.avatar" width="50px" class="rounded-2" />
+                            <img [src]="getPlayerImg(player)" width="50px" class="rounded-2" />
                             {{ getTeamName(player) }}
                         </td>
                         <td>{{ player.roster.settings.fpts }}</td>
