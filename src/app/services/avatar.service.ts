@@ -15,7 +15,7 @@ export class AvatarService {
 
   public getTeamImg(roster:LeagueUser) {
     if(roster!.metadata.avatar) return roster!.metadata.avatar;
-    else return this.getAvatar(roster.user_id);
+    else return this.getAvatar(roster.avatar);
   }
 
   public getThumbnail(id:string | null) {
