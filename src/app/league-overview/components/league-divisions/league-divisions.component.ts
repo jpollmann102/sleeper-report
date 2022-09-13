@@ -95,7 +95,7 @@ export class LeagueDivisionsComponent implements OnChanges {
   sortDivisionMembers(last:LeagueUser, curr:LeagueUser):number {
     const lastWinPer = this.getWinPercentage(last);
     const currWinPer = this.getWinPercentage(curr);
-    return lastWinPer - currWinPer;
+    return currWinPer - lastWinPer;
   }
 
 }
