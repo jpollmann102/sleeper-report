@@ -84,7 +84,8 @@ export class PlayerService implements OnDestroy {
     else return 'assets/football-helmet.png';
   }
 
-  private createStringRoster(roster:Array<string>):string {
+  private createStringRoster(roster:Array<string> | null):string {
+    if(roster === null) return '[]';
     let stringRoster = '[';
     roster.forEach((p, idx) => {
       stringRoster += `"${p}"`;

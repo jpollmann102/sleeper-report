@@ -24,7 +24,7 @@
                     <td class="text-start">
                         <div class="fs-5">
                             <div class="d-flex">
-                                <img [src]="playerMatchup.playerOne!.imgLink" width="75px" height="50px" class="rounded-2 me-2" />
+                                <img [src]="playerMatchup.playerOne?.imgLink" width="75px" height="50px" class="rounded-2 me-2" />
                                 <div class="flex-column">
                                     <div>
                                         {{ playerMatchup.playerOne?.full_name }}&nbsp;&nbsp;
@@ -33,7 +33,7 @@
                                         </span>
                                     </div>
                                     <div class="flex-row">
-                                        <img class="me-2" [src]="playerMatchup.playerOne!.teamImgLink" width="25px" class="rounded-2 me-2" />
+                                        <img class="me-2" [src]="playerMatchup.playerOne?.teamImgLink" width="25px" class="rounded-2 me-2" />
                                         <span class="badge" [appPlayerPosition]="playerMatchup.playerOne?.position">
                                             {{ playerMatchup.playerOne?.position }}
                                         </span>
@@ -90,11 +90,11 @@
                                         <span class="badge me-2" [appPlayerPosition]="playerMatchup.playerTwo?.position">
                                             {{ playerMatchup.playerTwo?.position }}
                                         </span>
-                                        <img [src]="playerMatchup.playerTwo!.teamImgLink" width="25px" class="rounded-2" />
+                                        <img [src]="playerMatchup.playerTwo?.teamImgLink" width="25px" class="rounded-2" />
                                     </div>
                                 </div>
                                 <div class="flex-column">
-                                    <img [src]="playerMatchup.playerTwo!.imgLink" width="75px" height="50px" class="rounded-2" />
+                                    <img [src]="playerMatchup.playerTwo?.imgLink" width="75px" height="50px" class="rounded-2" />
                                 </div>
                             </div>
                         </div>
