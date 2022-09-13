@@ -52,13 +52,17 @@ export class PowerRankingComponent implements OnChanges {
   }
 
   setupChartData(leagueUsers:Array<LeagueUser> | null) {
-    const newLabels:Array<string> = [];
     const newDatasets:Array<ChartDataset<"bar", number[]>> = [
       {
         data: [],
         label: '',
+        backgroundColor: [
+          'rgb(3,4,19)',
+        ],
       },
     ];
+
+    let teamPowerMap:Array<{ label:string, teamPower:number }> = [];
 
     leagueUsers?.forEach(lu => {
       let label = '';
@@ -67,15 +71,20 @@ export class PowerRankingComponent implements OnChanges {
 
       const teamPower = this.calculatePowerRank(lu.roster.settings);
 
-      newLabels.push(label);
-      newDatasets[0].data = [
-        ...newDatasets[0].data,
-        teamPower,
+      teamPowerMap = [
+        ...teamPowerMap,
+        {
+          label,
+          teamPower,
+        },
       ];
     });
 
+    teamPowerMap = teamPowerMap.sort((a,b) => b.teamPower - a.teamPower);
+    newDatasets[0].data = teamPowerMap.map(t => t.teamPower);
+
     this.barChartData = {
-      labels: newLabels,
+      labels: teamPowerMap.map(t => t.label),
       datasets: newDatasets,
     };
     this.chart?.update();
