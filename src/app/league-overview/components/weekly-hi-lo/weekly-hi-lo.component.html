@@ -4,13 +4,31 @@
     <div class="bg-light p-2 rounded-2">
         <div class="row" *ngFor="let week of hiLo">
             <div class="col-12">
-                <p><b>Week {{ week.week }}</b></p>
+                <div class="fs-4">Week {{ week.week }}</div>
             </div>
             <div class="col-6">
-                <p *ngFor="let hi of week.hi">{{ getTeamName(hi.leagueUser) }} - {{ hi.fpts }} pts</p>
+                <div class="mb-3"><b>High Scores</b></div>
+                <div *ngFor="let hi of week.hi">
+                    <div class="d-flex">
+                        <img [src]="getTeamPic(hi.leagueUser)" width="50px" height="50px" class="rounded-2 me-2">
+                        <div class="flex-column">
+                            <div class="text-break">{{ getTeamName(hi.leagueUser) }}</div>
+                            <div>{{ hi.fpts }} pts</div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-6">
-                <p *ngFor="let lo of week.lo">{{ getTeamName(lo.leagueUser) }} - {{ lo.fpts }} pts</p>
+                <div class="mb-3"><b>Low Scores</b></div>
+                <div *ngFor="let lo of week.lo">
+                    <div class="d-flex">
+                        <img [src]="getTeamPic(lo.leagueUser)" width="50px" height="50px" class="rounded-2 me-2">
+                        <div class="flex-column">
+                            <div class="text-break">{{ getTeamName(lo.leagueUser) }}</div>
+                            <div>{{ lo.fpts }} pts</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <p *ngIf="hiLo.length === 0">No scores yet</p>

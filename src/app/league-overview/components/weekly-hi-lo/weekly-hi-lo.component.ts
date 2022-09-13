@@ -3,6 +3,7 @@ import { catchError, forkJoin, Observable, of, take } from 'rxjs';
 import { League } from 'src/app/interfaces/league';
 import { LeagueMatchup } from 'src/app/interfaces/league-matchup';
 import { LeagueUser } from 'src/app/interfaces/league-user';
+import { AvatarService } from 'src/app/services/avatar.service';
 import { LeagueService } from '../../services/league.service';
 
 @Component({
@@ -16,7 +17,8 @@ export class WeeklyHiLoComponent implements OnChanges {
   public hiLo:Array<{ week:number, hi:Array<{ leagueUser:LeagueUser | undefined, fpts:number | undefined }>, lo:Array<{ leagueUser:LeagueUser | undefined, fpts:number | undefined }> }> = [];
   public loading = false;
 
-  constructor(private leagueService:LeagueService) {
+  constructor(private leagueService:LeagueService,
+              private avatarService:AvatarService) {
     this.leagueService.nflInfoLoaded
       .subscribe(
         () => this.setupHiLo(this.league, this.leagueUsers, this.leagueService.getCurrentWeek())
@@ -44,7 +46,7 @@ export class WeeklyHiLoComponent implements OnChanges {
     this.loading = true;
 
     let obs:Array<Observable<Array<LeagueMatchup>>> = [];
-    for(let week = 1; week < currentWeek + 1; week++) {
+    for(let week = 1; week < currentWeek; week++) {
       obs = [
         ...obs,
         this.leagueService.getLeagueMatchups(
@@ -53,6 +55,7 @@ export class WeeklyHiLoComponent implements OnChanges {
         ),
       ];
     }
+
     forkJoin(obs)
       .pipe(
         take(1),
@@ -96,6 +99,7 @@ export class WeeklyHiLoComponent implements OnChanges {
           ];
         });
         this.hiLo = hiLo;
+        console.log(hiLo);
         this.loading = false;
       });
   }
@@ -104,6 +108,10 @@ export class WeeklyHiLoComponent implements OnChanges {
     if(!leagueUser) return '';
     if(leagueUser.metadata.team_name) return leagueUser.metadata.team_name;
     return leagueUser.display_name;
+  }
+
+  getTeamPic(leagueUser:LeagueUser | undefined) {
+    return this.avatarService.getTeamImg(leagueUser);
   }
 
 }
