@@ -59,6 +59,9 @@ export class PowerRankingComponent implements OnChanges {
         backgroundColor: [
           'rgb(3,4,19)',
         ],
+        hoverBackgroundColor: [
+          'rgb(13,110,253)',
+        ],
       },
     ];
 
