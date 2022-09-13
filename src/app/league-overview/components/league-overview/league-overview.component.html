@@ -13,6 +13,9 @@
                 <div class="mb-3">
                     <app-league-stats [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-league-stats>
                 </div>
+                <div>
+                    <app-league-divisions [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-league-divisions>
+                </div>
             </div>
             <div class="col-12 col-xl-4">
                 <div class="mb-3">
@@ -24,12 +27,9 @@
                 <div class="mb-3">
                     <app-league-tx [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-league-tx>
                 </div>
-                <div class="mb-3">
+                <div>
                     <app-league-otb [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-league-otb>
                 </div>
-            </div>
-            <div class="col-12">
-                <app-league-divisions [league]="selectedLeague" [leagueUsers]="leagueUsers"></app-league-divisions>
             </div>
         </div>
     </ng-template>
